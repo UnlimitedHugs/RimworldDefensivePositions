@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<KeyBindingDefs>
+	<KeyBindingDef>
+		<category>DefensivePositions</category>
+		<defName>DefensivePositionGizmo</defName>
+		<label>Send pawn to defensive position</label>
+		<defaultKeyCodeA>T</defaultKeyCodeA>
+	</KeyBindingDef>
+	
+</KeyBindingDefs>

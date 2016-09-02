@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+	<DefPos_basic_label>Defensive position</DefPos_basic_label>
+	<DefPos_basic_desc>Send colonist to their defensive position.
+Shift + click to set the position.
+Alt + click to switch to advanced mode.</DefPos_basic_desc>
+	<DefPos_advanced_label>Positions</DefPos_advanced_label>
+	<DefPos_advanced_desc>Send colonist to defensive position {0}.
+Shift + click to set the position.
+Alt + click to switch to basic mode.</DefPos_advanced_desc>
+
+	<DefPos_msg_noposition>No defensive postion set. Click the button while holding shift to set it.</DefPos_msg_noposition>
+	<DefPos_msg_noposition_partial>Colonists missing defensive positions: {0}</DefPos_msg_noposition_partial>
+	<DefPos_msg_basicSet>Defensive position has been set for {0} colonists.</DefPos_msg_basicSet>
+	<DefPos_msg_advancedSet>Defensive position {0} has been set for {1} colonists.</DefPos_msg_advancedSet>
+
+</LanguageData>

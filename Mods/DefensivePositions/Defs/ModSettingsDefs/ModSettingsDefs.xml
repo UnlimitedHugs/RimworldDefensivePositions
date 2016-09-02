@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+	<DefensivePositions.ModSettingsDef>
+		<defName>DefensivePositionsSettings</defName>
+		<!-- 
+		When set to true, pushing the assigned hotkey (default T) while in advanced mode will activate the last used position control.
+		When false, the first control will aways be activated by the hotkey (same as in basic mode).
+		-->
+		<hotkeyActivatesLastUsedPosition>false</hotkeyActivatesLastUsedPosition>
+	</DefensivePositions.ModSettingsDef>	
+</Defs>

@@ -26,7 +26,7 @@ var MSBuildPath = "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/MSBuild.exe";
 var sevenZipPath = "C:/Program Files/7-Zip/7z.exe";
 var assemblyInfoPath = "./Properties/AssemblyInfo.cs";
 var githubUsername = "UnlimitedHugs";
-var githubRepo = "RimworldAllowTool";
+var githubRepo = "RimworldDefensivePositions";
 var githubTokenPath = "../githubToken.txt";
 
 //////////////////////////////////////////// UTILS ////////////////////////////////////////////

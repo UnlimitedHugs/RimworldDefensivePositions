@@ -11,7 +11,7 @@ Shift + click to set the position.
 Alt + click to switch to basic mode.</DefPos_advanced_desc>
 
 	<DefPos_msg_noposition>No defensive postion set. Click the button while holding shift to set it.</DefPos_msg_noposition>
-	<DefPos_msg_noposition_partial>Colonists missing defensive positions: {0}</DefPos_msg_noposition_partial>
+	<DefPos_msg_noposition_partial>Colonists missing defensive position: {0}</DefPos_msg_noposition_partial>
 	<DefPos_msg_basicSet>Defensive position has been set for {0} colonists.</DefPos_msg_basicSet>
 	<DefPos_msg_advancedSet>Defensive position {0} has been set for {1} colonists.</DefPos_msg_advancedSet>
 

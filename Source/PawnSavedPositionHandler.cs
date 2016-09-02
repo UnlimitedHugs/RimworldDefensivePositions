@@ -10,12 +10,12 @@ namespace DefensivePositions {
 	 * This is where the gizmos are displayed and the positions are stored for saving.
 	 */
 	[StaticConstructorOnStartup]
-	public class Comp_PawnDefensivePosition : ThingComp {
+	public class PawnSavedPositionHandler : IExposable {
 		private const int NumAdvancedPositionButtons = 4;
 
 		private static readonly Texture2D UITex_Basic = ContentFinder<Texture2D>.Get("UIPositionLarge");
 		private static readonly Texture2D[] UITex_AdvancedIcons;
-		static Comp_PawnDefensivePosition() {
+		static PawnSavedPositionHandler() {
 			UITex_AdvancedIcons = new Texture2D[NumAdvancedPositionButtons];
 			for (int i = 0; i < UITex_AdvancedIcons.Length; i++) {
 				UITex_AdvancedIcons[i] = ContentFinder<Texture2D>.Get("UIPositionSmall_"+(i+1));
@@ -24,24 +24,25 @@ namespace DefensivePositions {
 
 		private static int lastAdvancedControlUsed;
 
+		private Pawn owner;
+
 		private List<IntVec3> savedPositions;
-		
-		public override void Initialize(CompProperties compProps) {
-			base.Initialize(compProps);
+
+		public PawnSavedPositionHandler() {
 			InitalizePositionList();
 		}
 
-		public override void PostExposeData() {
-			base.PostExposeData();
+		public void ExposeData() {
 			Scribe_Collections.LookList(ref savedPositions, "savedPositions", LookMode.Value);
 			if (Scribe.mode == LoadSaveMode.LoadingVars && savedPositions == null) {
 				InitalizePositionList();
 			}
 		}
 
-		public override IEnumerable<Command> CompGetGizmosExtra() {
-			if (DefensivePositionManager.Instance.AdvancedModeEnabled) {
-				yield return new Gizmo_QuadButtonPanel {
+		public Command GetGizmo(Pawn forPawn) {
+			owner = forPawn;
+			if (DefensivePositionsManager.Instance.AdvancedModeEnabled) {
+				return new Gizmo_QuadButtonPanel {
 					iconTextures = UITex_AdvancedIcons,
 					iconClickAction = OnAdvancedGizmoClick,
 					hotkeyAction = OnAdvancedHotkeyDown,
@@ -51,7 +52,7 @@ namespace DefensivePositions {
 					activateSound = SoundDefOf.TickTiny
 				};
 			} else {
-				yield return new Command_Action {
+				return new Command_Action {
 					defaultLabel = "DefPos_basic_label".Translate(),
 					defaultDesc = "DefPos_basic_desc".Translate(),
 					hotKey = KeyBindingDef.Named("DefensivePositionGizmo"),
@@ -63,7 +64,7 @@ namespace DefensivePositions {
 		}
 
 		private void OnAdvancedHotkeyDown() {
-			var controlToActivate = DefensivePositionManager.Instance.SettingsDef.hotkeyActivatesLastUsedPosition ? lastAdvancedControlUsed : 0;
+			var controlToActivate = DefensivePositionsManager.Instance.SettingsDef.hotkeyActivatesLastUsedPosition ? lastAdvancedControlUsed : 0;
 			HandleControlInteraction(controlToActivate);
 		}
 
@@ -77,12 +78,11 @@ namespace DefensivePositions {
 		}
 
 		private void HandleControlInteraction(int controlIndex) {
-			var pawn = (Pawn) parent;
-			var manager = DefensivePositionManager.Instance;
+			var manager = DefensivePositionsManager.Instance;
 			if (ShiftIsHeld()) {
 				// save new spot
-				SetDefensivePosition(pawn, controlIndex);
-				manager.ReportPawnInteraction(DefensivePositionManager.PawnInteractionType.SavedPosition, pawn, true, controlIndex);
+				SetDefensivePosition(owner, controlIndex);
+				manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SavedPosition, owner, true, controlIndex);
 			} else if (AltIsHeld()) {
 				// switch mode
 				manager.ScheduleAdvancedModeToggle();
@@ -90,14 +90,14 @@ namespace DefensivePositions {
 				// draft and send to saved spot
 				var spot = savedPositions[controlIndex];
 				if (spot.IsValid) {
-					if (!pawn.Drafted) {
-						pawn.drafter.Drafted = true;
+					if (!owner.Drafted) {
+						owner.drafter.Drafted = true;
 						SoundDef.Named("DraftOn").PlayOneShotOnCamera();
 					}
-					SendDraftedPawnToPosition(pawn, spot);
-					manager.ReportPawnInteraction(DefensivePositionManager.PawnInteractionType.SentToSavedPosition, pawn, true, controlIndex);
+					SendDraftedPawnToPosition(owner, spot);
+					manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SentToSavedPosition, owner, true, controlIndex);
 				} else {
-					manager.ReportPawnInteraction(DefensivePositionManager.PawnInteractionType.SentToSavedPosition, pawn, false, controlIndex);
+					manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SentToSavedPosition, owner, false, controlIndex);
 				}
 			}
 		}

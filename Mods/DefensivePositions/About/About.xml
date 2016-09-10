@@ -1,14 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Defensive Positions</name>
-  <author>UnlimitedHugs</author>
-  
-  <description>Send your colonists off to the barricades with a single click.
-  </description>
-  <targetVersion>0.15.0</targetVersion>
+	<name>Defensive Positions</name>
+	<author>UnlimitedHugs</author>
+	<targetVersion>0.15.0</targetVersion>
+	<url>https://ludeon.com/forums/index.php?topic=25535.0</url>
+	
+	<description>&lt;size=20&gt;Description&lt;/size&gt;
+Allows your colonists to remember their position during base defense. You can send off your colonists to their positions with a single click.
+		
+&lt;size=20&gt;How to use&lt;/size&gt;
+&lt;b&gt;Set defensive positions for colonists&lt;/b&gt;
+1) Draft your defenders and place them where you want them.
+2) With your defenders selected, hold the Shift key and click the Defensive position button (or press T).
+Done. The selected colonists will remember their held positions.
 
-<url>https://ludeon.com/forums/index.php?topic=25535.0</url>
+&lt;b&gt;Send colonists to saved positions&lt;/b&gt;
+1) Select your defenders.
+2) Click the Defensive position button (or press T).
+Your defenders will be drafted and will run to their saved positions.
 
-
-
+&lt;b&gt;Advanced mode&lt;/b&gt;
+Hold the Alt key and click the Defensive position button to switch between basic and advanced mode.
+Advanced mode works exactly like Basic, but you have 4 positions to work with. Shift+click a slot to save a position, just click to send the selected pawns to the position they have been assigned under that number.
+Pressing T is the same as clicking the first slot.
+</description>
+	
 </ModMetaData>

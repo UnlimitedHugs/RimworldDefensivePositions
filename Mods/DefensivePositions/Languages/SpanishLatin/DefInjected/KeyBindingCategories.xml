@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<KeyBindingCategoryDefs>
+	<KeyBindingCategoryDef>
+		<defName>DefensivePositions</defName>
+		<label>Defensive Positions</label>
+		<description>Accesos directos para las acciones del mod Defensive Positions.</description>
+	</KeyBindingCategoryDef>
+	
+</KeyBindingCategoryDefs>

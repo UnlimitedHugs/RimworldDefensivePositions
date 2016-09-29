@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+	<DefPos_basic_label>Posición defensiva</DefPos_basic_label>
+	<DefPos_basic_desc>Enviar colono a la posición defensiva.
+Shift + clic para establecer posición.
+Alt + click para cambiar al modo avanzado.</DefPos_basic_desc>
+	<DefPos_advanced_label>Posiciones</DefPos_advanced_label>
+	<DefPos_advanced_desc>Enviar colono a la posición defensiva {0}.
+Shift + click para establecer la posición.
+Alt + click para cambiar al modo básico.</DefPos_advanced_desc>
+
+	<DefPos_msg_noposition>No se ha establecido una posición defensiva. Haga clic en el botón mientras mantiene shift para establecerla.</DefPos_msg_noposition>
+	<DefPos_msg_noposition_partial>Colonos sin una posición defensiva establecida: {0}</DefPos_msg_noposition_partial>
+	<DefPos_msg_basicSet>Posición defensiva establecida para {0} colono/s.</DefPos_msg_basicSet>
+	<DefPos_msg_advancedSet>Posición defensiva {0} se ha establecido para {1} colono/s.</DefPos_msg_advancedSet>
+
+</LanguageData>

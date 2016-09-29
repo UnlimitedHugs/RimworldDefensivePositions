@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<KeyBindingDefs>
+	<KeyBindingDef>
+		<category>DefensivePositions</category>
+		<defName>DefensivePositionGizmo</defName>
+		<label>Enviar peón a la posición defensiva</label>
+		<defaultKeyCodeA>T</defaultKeyCodeA>
+	</KeyBindingDef>
+	
+</KeyBindingDefs>

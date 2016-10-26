@@ -48,15 +48,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\DefensivePositionsMod.cs" />
     <Compile Include="Source\DefensivePositionsUtility.cs" />
     <Compile Include="Source\DraftControllerDetour.cs" />
-    <Compile Include="Source\ModSettingsDef.cs" />
     <Compile Include="Source\Gizmo_QuadButtonPanel.cs" />
     <Compile Include="Source\DefensivePositionsManager.cs" />
+    <Compile Include="Source\HotkeyDefOf.cs" />
+    <Compile Include="Source\MiscHotkeyHandler.cs" />
     <Compile Include="Source\PawnSavedPositionHandler.cs" />
+    <Compile Include="Source\PawnSquadHandler.cs" />
     <Compile Include="Source\ScheduledReportManager.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\HugsLib\HugsLib.csproj">
+      <Project>{a5d9bd45-533c-4ca0-9298-8950a3da724c}</Project>
+      <Name>HugsLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

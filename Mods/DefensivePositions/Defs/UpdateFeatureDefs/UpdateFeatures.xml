@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<HugsLib.UpdateFeatureDef Abstract="true" Name="UpdateFeatureBase">
+		<defName>UpdateFeature</defName>
+		<modNameReadable>Defensive Positions</modNameReadable>
+		<modIdentifier>DefensivePositions</modIdentifier>
+		<linkUrl>https://ludeon.com/forums/index.php?topic=25535</linkUrl>
+	</HugsLib.UpdateFeatureDef>
+	
+	<HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+		<defName>DefensivePositions_1_2_0</defName>
+		<assemblyVersion>1.2.0</assemblyVersion>
+		<content>img:KeysTutor/keypad|caption:Welcome to convenience! Defensive Positions now allows you to group colonists into squads for quick selection. Up to 9 squads can be assigned. Additionally, there are now hotkeys for handling all colonists- selecting everyone, undrafting everyone, and sending everyone off to their defensive positions. If you are playing on a laptop without the numeric keypad, you can reassign these keys in Options &gt; Keyboard configuration.|img:KeysTutor/assign_squad|caption:Assign a new squad by selecting your colonists, holding Control and pressing a keypad number from 1 to 9.|img:KeysTutor/select_squad|caption:Select all colonists belonging to a squad by pressing the key you assigned.|img:KeysTutor/send_everyone|caption:By pressing 0 on the keypad you can send all your colonists to their assigned defensive positions without selecting them.|img:KeysTutor/select_everyone|caption:The keypad period key allows you to select all colonists with one keystroke.|img:KeysTutor/undraft_everyone|caption:Press keypad divide (slash) to release all drafted colonists.|Finally, colonists will now automatically man turrets and mortars if you set their defensive position on the interaction circle of the gun. Happy defending!</content>
+	</HugsLib.UpdateFeatureDef>
+	
+</Defs>

@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using HugsLib;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace DefensivePositions {
@@ -14,20 +17,27 @@ namespace DefensivePositions {
 			get { return advancedModeEnabled; }
 		}
 
-		public ModSettingsDef SettingsDef { get; private set; }
+		public int LastAdvancedControlUsed {
+			get { return lastAdvancedControlUsed; }
+			set { lastAdvancedControlUsed = value; }
+		}
 
 		public ScheduledReportManager Reporter { get; private set; }
 
 		private bool modeSwitchScheduled;
+		private MiscHotkeyHandler miscHotkeys;
 
 		// saved fields
 		private bool advancedModeEnabled;
+		private int lastAdvancedControlUsed;
 		private Dictionary<int, PawnSavedPositionHandler> handlers = new Dictionary<int, PawnSavedPositionHandler>();
+		private PawnSquadHandler squads;
 
 		public DefensivePositionsManager() {
 			Instance = this;
 			Reporter = new ScheduledReportManager();
-			LoadSettingsDef();
+			squads = new PawnSquadHandler();
+			miscHotkeys = new MiscHotkeyHandler();
 			TryDraftControllerDetour();
 			EnsureComponentIsActive();
 		}
@@ -35,19 +45,27 @@ namespace DefensivePositions {
 		public override void ExposeData() {
 			base.ExposeData();
 			Scribe_Values.LookValue(ref advancedModeEnabled, "advancedModeEnabled", false);
+			Scribe_Values.LookValue(ref lastAdvancedControlUsed, "lastAdvancedControlUsed", 0);
 			Scribe_Collections.LookDictionary(ref handlers, "handlers", LookMode.Value, LookMode.Deep);
-			if (Scribe.mode == LoadSaveMode.LoadingVars && handlers == null) {
-				handlers = new Dictionary<int, PawnSavedPositionHandler>();
+			Scribe_Deep.LookDeep(ref squads, "squads");
+			if (Scribe.mode == LoadSaveMode.LoadingVars) {
+				if(handlers == null) handlers = new Dictionary<int, PawnSavedPositionHandler>();
+				if(squads == null) squads = new PawnSquadHandler();
+				lastAdvancedControlUsed = Mathf.Clamp(lastAdvancedControlUsed, 0, PawnSavedPositionHandler.NumAdvancedPositionButtons-1);
 			}
 		}
 
 		public override void MapComponentUpdate() {
-			base.MapComponentUpdate();
 			if (modeSwitchScheduled) {
 				advancedModeEnabled = !advancedModeEnabled;
 				modeSwitchScheduled = false;
 			}
 			Reporter.Update();
+		}
+
+		public override void MapComponentOnGUI() {
+			squads.OnGUI();
+			miscHotkeys.OnGUI();
 		}
 
 		public PawnSavedPositionHandler GetHandlerForPawn(Pawn pawn) {
@@ -65,14 +83,6 @@ namespace DefensivePositions {
 			modeSwitchScheduled = true;
 		}
 
-		private void LoadSettingsDef() {
-			SettingsDef = DefDatabase<ModSettingsDef>.GetNamed("DefensivePositionsSettings", false);
-			if (SettingsDef == null) {
-				DefensivePositionsUtility.Error("Missing setting def named DefensivePositionsSettings");
-				SettingsDef = new ModSettingsDef();
-			}
-		}
-
 		// ensure the component is active even on maps where the mod was not active at map creation
 		private void EnsureComponentIsActive() {
 			LongEventHandler.ExecuteWhenFinished(() => {
@@ -85,11 +95,8 @@ namespace DefensivePositions {
 		private void TryDraftControllerDetour() {
 			var controllerMethod = typeof (Pawn_DraftController).GetMethod("GetGizmos", BindingFlags.Instance | BindingFlags.NonPublic);
 			var detouredMethod = typeof (DraftControllerDetour).GetMethod("_GetGizmos", BindingFlags.Static | BindingFlags.Public);
-			var success = false;
-			if (controllerMethod != null && detouredMethod != null) {
-				success = DefensivePositionsUtility.TryDetourFromTo(controllerMethod, detouredMethod);
-			}
-			if (!success) DefensivePositionsUtility.Error("Failed to detour method Pawn_DraftController.GetGizmos");
+			if (controllerMethod == null || detouredMethod == null) DefensivePositionsMod.Instance.Logger.Error("Failed to reflect required methods.");
+			DetourProvider.CompatibleDetour(controllerMethod, detouredMethod, DefensivePositionsMod.Instance.ModContentPack.Name);
 		}
 
 	}

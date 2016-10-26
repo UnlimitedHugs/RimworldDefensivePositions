@@ -8,7 +8,8 @@ namespace DefensivePositions {
 	public class ScheduledReportManager {
 		public enum ReportType {
 			SavedPosition,
-			SentToSavedPosition
+			SentToSavedPosition,
+			ClearedPosition
 		}
 
 		private class ScheduledReport {
@@ -37,10 +38,19 @@ namespace DefensivePositions {
 						Messages.Message("DefPos_msg_noposition".Translate(), MessageSound.RejectInput);
 					} else if (report.numPawnsHadTargetPosition > 0) {
 						// some pawns had valid positions
-						Messages.Message(string.Format("DefPos_msg_noposition_partial".Translate(), report.noTargetPositionNames), MessageSound.RejectInput);
+						Messages.Message(string.Format("DefPos_msg_noposition_partial".Translate(), report.noTargetPositionNames), MessageSound.Silent);
 					}
 				}
-
+			} else if (report.reportType == ReportType.ClearedPosition) {
+				if (report.numPawnsHadTargetPosition == 0) {
+					Messages.Message("DefPos_msg_clearFailed".Translate(), MessageSound.RejectInput);
+				} else {
+					if (DefensivePositionsManager.Instance.AdvancedModeEnabled) {
+						Messages.Message("DefPos_msg_advancedCleared".Translate(report.controlIndex + 1, report.numPawnsHadTargetPosition), MessageSound.Benefit);
+					} else {
+						Messages.Message("DefPos_msg_basicCleared".Translate(report.numPawnsHadTargetPosition), MessageSound.Benefit);
+					}
+				}
 			}
 			report = null;
 		}
@@ -49,20 +59,28 @@ namespace DefensivePositions {
 			if (report == null) {
 				report = new ScheduledReport { reportType = type };
 			}
-			if (type == ReportType.SavedPosition) {
-				report.numPawnsSavedPosition++;
-			} else if (type == ReportType.SentToSavedPosition) {
-				if (success) {
-					report.numPawnsHadTargetPosition++;
-				} else {
-					report.numPawnsHadNoTargetPosition++;
-					var pawnName = pawn.NameStringShort;
-					if (report.noTargetPositionNames == null) {
-						report.noTargetPositionNames += pawnName;
+			switch (type) {
+				case ReportType.SavedPosition:
+					report.numPawnsSavedPosition++;
+					break;
+				case ReportType.SentToSavedPosition:
+					if (success) {
+						report.numPawnsHadTargetPosition++;
 					} else {
-						report.noTargetPositionNames += ", " + pawnName;
+						report.numPawnsHadNoTargetPosition++;
+						var pawnName = pawn.NameStringShort;
+						if (report.noTargetPositionNames == null) {
+							report.noTargetPositionNames += pawnName;
+						} else {
+							report.noTargetPositionNames += ", " + pawnName;
+						}
 					}
-				}
+					break;
+				case ReportType.ClearedPosition:
+					if (success) {
+						report.numPawnsHadTargetPosition++;
+					}
+					break;
 			}
 			report.controlIndex = usedControlIndex;
 		}

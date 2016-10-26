@@ -8,11 +8,29 @@ Alt + click to switch to advanced mode.</DefPos_basic_desc>
 	<DefPos_advanced_label>Positions</DefPos_advanced_label>
 	<DefPos_advanced_desc>Send colonist to defensive position {0}.
 Shift + click to set the position.
+Control/Option + click to forget position.
 Alt + click to switch to basic mode.</DefPos_advanced_desc>
 
-	<DefPos_msg_noposition>No defensive postion set. Click the button while holding shift to set it.</DefPos_msg_noposition>
+	<!-- button messages -->
+	<DefPos_msg_noposition>No defensive position set. Click the button while holding shift to set it.</DefPos_msg_noposition>
 	<DefPos_msg_noposition_partial>Colonists missing defensive position: {0}</DefPos_msg_noposition_partial>
 	<DefPos_msg_basicSet>Defensive position has been set for {0} colonists.</DefPos_msg_basicSet>
 	<DefPos_msg_advancedSet>Defensive position {0} has been set for {1} colonists.</DefPos_msg_advancedSet>
-
+	<DefPos_msg_basicCleared>Cleared defensive position for {0} colonists.</DefPos_msg_basicCleared>
+	<DefPos_msg_advancedCleared>Cleared defensive position {0} for {1} colonists.</DefPos_msg_advancedCleared>
+	<DefPos_msg_clearFailed>None of the selected pawns had a defensive position to clear.</DefPos_msg_clearFailed>
+	
+	<!-- keyboard shortcut messages -->
+	<DefPos_msg_squadEmpty>No colonists assigned to squad {0}. Hold Shift and press again to assign.</DefPos_msg_squadEmpty>
+	<DefPos_msg_squadCleared>No colonists selected. Squad {0} cleared.</DefPos_msg_squadCleared>
+	<DefPos_msg_squadAssigned>Assigned {0} colonists to squad {1}.</DefPos_msg_squadAssigned>
+	<DefPos_msg_selectedAll>All colonists selected.</DefPos_msg_selectedAll>
+	<DefPos_msg_sentAll>Sent {0} colonists to defensive positions.</DefPos_msg_sentAll>
+	<DefPos_msg_nopositionAll>None of the colonists have a defensive position set.</DefPos_msg_nopositionAll>
+	<DefPos_msg_undraftedAll>Undrafted {0} colonists.</DefPos_msg_undraftedAll>
+	<DefPos_msg_nooneDrafted>All colonists are already undrafted.</DefPos_msg_nooneDrafted>
+	
+	<setting_hotkeyMode_label>Hotkey activates first slot only</setting_hotkeyMode_label>
+	<setting_hotkeyMode_desc>When enabled, in advanced mode the button hotkey will always activate the first save slot. When disabled, the hotkey will activate the most recently used slot.</setting_hotkeyMode_desc>
+	
 </LanguageData>

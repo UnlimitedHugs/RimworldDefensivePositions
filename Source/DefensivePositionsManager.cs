@@ -75,6 +75,7 @@ namespace DefensivePositions {
 				handler = new PawnSavedPositionHandler();
 				handlers.Add(pawnId, handler);
 			}
+			handler.Owner = pawn;
 			return handler;
 		}
 

@@ -21,8 +21,8 @@ namespace DefensivePositions {
 				UITex_AdvancedIcons[i] = ContentFinder<Texture2D>.Get("UIPositionSmall_"+(i+1));
 			}
 		}
-		
-		private Pawn owner;
+
+		public Pawn Owner { get; set; }
 
 		private List<IntVec3> savedPositions;
 
@@ -41,12 +41,12 @@ namespace DefensivePositions {
 			var index = GetHotkeyControlIndex();
 			var position = savedPositions[index];
 			if(!position.IsValid) return false;
-			DraftPawnToPosition(owner, position);
+			DraftPawnToPosition(Owner, position);
 			return true;
 		}
 
 		public Command GetGizmo(Pawn forPawn) {
-			owner = forPawn;
+			Owner = forPawn;
 			if (DefensivePositionsManager.Instance.AdvancedModeEnabled) {
 				return new Gizmo_QuadButtonPanel {
 					iconTextures = UITex_AdvancedIcons,
@@ -91,12 +91,12 @@ namespace DefensivePositions {
 			var manager = DefensivePositionsManager.Instance;
 			if (DefensivePositionsUtility.ShiftIsHeld) {
 				// save new spot
-				SetDefensivePosition(owner, controlIndex);
-				manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SavedPosition, owner, true, controlIndex);
+				SetDefensivePosition(Owner, controlIndex);
+				manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SavedPosition, Owner, true, controlIndex);
 			} else if (DefensivePositionsUtility.ControlIsHeld) {
 				// unset saved spot
 				var hadPosition = DiscardSavedPosition(controlIndex);
-				manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.ClearedPosition, owner, hadPosition, controlIndex);
+				manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.ClearedPosition, Owner, hadPosition, controlIndex);
 			} else if (DefensivePositionsUtility.AltIsHeld) {
 				// switch mode
 				manager.ScheduleAdvancedModeToggle();
@@ -104,10 +104,10 @@ namespace DefensivePositions {
 				// draft and send to saved spot
 				var spot = savedPositions[controlIndex];
 				if (spot.IsValid) {
-					DraftPawnToPosition(owner, spot);
-					manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SentToSavedPosition, owner, true, controlIndex);
+					DraftPawnToPosition(Owner, spot);
+					manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SentToSavedPosition, Owner, true, controlIndex);
 				} else {
-					manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SentToSavedPosition, owner, false, controlIndex);
+					manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SentToSavedPosition, Owner, false, controlIndex);
 				}
 			}
 		}
@@ -128,9 +128,9 @@ namespace DefensivePositions {
 		}
 
 		private void DraftPawnToPosition(Pawn pawn, IntVec3 position) {
-			if (!pawn.IsColonistPlayerControlled || pawn.Downed) return;
-			if (!owner.Drafted) {
-				owner.drafter.Drafted = true;
+			if (!pawn.IsColonistPlayerControlled || pawn.Downed || pawn.drafter == null) return;
+			if (!pawn.Drafted) {
+				pawn.drafter.Drafted = true;
 				SoundDef.Named("DraftOn").PlayOneShotOnCamera();
 			}
 			var turret = TryFindMannableGunAtPosition(pawn, position);

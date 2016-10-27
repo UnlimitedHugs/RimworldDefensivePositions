@@ -128,6 +128,7 @@ namespace DefensivePositions {
 		}
 
 		private void DraftPawnToPosition(Pawn pawn, IntVec3 position) {
+			if (!pawn.IsColonistPlayerControlled || pawn.Downed) return;
 			if (!owner.Drafted) {
 				owner.drafter.Drafted = true;
 				SoundDef.Named("DraftOn").PlayOneShotOnCamera();

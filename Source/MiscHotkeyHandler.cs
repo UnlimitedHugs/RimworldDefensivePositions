@@ -32,6 +32,7 @@ namespace DefensivePositions {
 		private void SendAllColonistsToDefensivePosition() {
 			var hits = 0;
 			foreach (var pawn in GetAllColonists()) {
+				if (!pawn.IsColonistPlayerControlled || pawn.Downed) continue;
 				var handler = DefensivePositionsManager.Instance.GetHandlerForPawn(pawn);
 				if (handler.TrySendPawnToPosition()) {
 					hits++;
@@ -60,7 +61,8 @@ namespace DefensivePositions {
 		}
 
 		private IEnumerable<Pawn> GetAllColonists() {
-			return Find.MapPawns.AllPawnsSpawned.Where(p => !p.Dead && p.IsColonist && p.Faction != null && p.Faction.IsPlayer);
+			// converting to array to prevent collection modified exception- pawn may be carrying another pawn
+			return Find.MapPawns.AllPawnsSpawned.Where(p => !p.Dead && p.IsColonist && p.Faction != null && p.Faction.IsPlayer).ToArray();
 		}
 	}
 }

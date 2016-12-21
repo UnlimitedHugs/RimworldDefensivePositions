@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using HugsLib.Utils;
 using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.AI;
-using Verse.Sound;
 
 namespace DefensivePositions {
 	/**
@@ -12,6 +12,7 @@ namespace DefensivePositions {
 	[StaticConstructorOnStartup]
 	public class PawnSavedPositionHandler : IExposable {
 		public const int NumAdvancedPositionButtons = 4;
+		private const int InvalidMapValue = -1;
 
 		private static readonly Texture2D UITex_Basic = ContentFinder<Texture2D>.Get("UIPositionLarge");
 		private static readonly Texture2D[] UITex_AdvancedIcons;
@@ -24,7 +25,10 @@ namespace DefensivePositions {
 
 		public Pawn Owner { get; set; }
 
-		private List<IntVec3> savedPositions;
+		// --- saved fields ---
+		private List<IntVec3> savedPositions; // the positions saved in the 4 slots for this pawn
+		private List<int> originalMaps; // the map ids these positions were saved on
+		// ---
 
 		public PawnSavedPositionHandler() {
 			InitalizePositionList();
@@ -32,15 +36,16 @@ namespace DefensivePositions {
 
 		public void ExposeData() {
 			Scribe_Collections.LookList(ref savedPositions, "savedPositions", LookMode.Value);
+			Scribe_Collections.LookList(ref originalMaps, "originalMaps", LookMode.Value);
 			if (Scribe.mode == LoadSaveMode.LoadingVars && savedPositions == null) {
 				InitalizePositionList();
 			}
 		}
 
-		public bool TrySendPawnToPosition() {
+		public bool TrySendPawnToPositionByHotkey() {
 			var index = GetHotkeyControlIndex();
 			var position = savedPositions[index];
-			if(!position.IsValid) return false;
+			if(!PawnHasValidSavedPositionOnMap(Owner, index)) return false;
 			DraftPawnToPosition(Owner, position);
 			return true;
 		}
@@ -84,26 +89,26 @@ namespace DefensivePositions {
 		}
 
 		private int GetHotkeyControlIndex() {
-			return DefensivePositionsMod.Instance.FirstSlotHotkeySetting.Value ? 0 : DefensivePositionsManager.Instance.LastAdvancedControlUsed;
+			return DefensivePositionsManager.Instance.FirstSlotHotkeySetting.Value ? 0 : DefensivePositionsManager.Instance.LastAdvancedControlUsed;
 		}
 
 		private void HandleControlInteraction(int controlIndex) {
 			var manager = DefensivePositionsManager.Instance;
-			if (DefensivePositionsUtility.ShiftIsHeld) {
+			if (HugsLibUtility.ShiftIsHeld) {
 				// save new spot
 				SetDefensivePosition(Owner, controlIndex);
 				manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SavedPosition, Owner, true, controlIndex);
-			} else if (DefensivePositionsUtility.ControlIsHeld) {
+			} else if (HugsLibUtility.ControlIsHeld) {
 				// unset saved spot
 				var hadPosition = DiscardSavedPosition(controlIndex);
 				manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.ClearedPosition, Owner, hadPosition, controlIndex);
-			} else if (DefensivePositionsUtility.AltIsHeld) {
+			} else if (HugsLibUtility.AltIsHeld) {
 				// switch mode
 				manager.ScheduleAdvancedModeToggle();
 			} else {
 				// draft and send to saved spot
 				var spot = savedPositions[controlIndex];
-				if (spot.IsValid) {
+				if (PawnHasValidSavedPositionOnMap(Owner, controlIndex)) {
 					DraftPawnToPosition(Owner, spot);
 					manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SentToSavedPosition, Owner, true, controlIndex);
 				} else {
@@ -119,11 +124,18 @@ namespace DefensivePositions {
 				targetPos = curPawnJob.targetA.Cell;
 			}
 			savedPositions[postionIndex] = targetPos;
+			originalMaps[postionIndex] = pawn.Map.uniqueID;
+		}
+
+		// ensures that control index has a saved position and that position was saved on the map the pawn is on
+		private bool PawnHasValidSavedPositionOnMap(Pawn pawn, int controlIndex) {
+			return savedPositions[controlIndex].IsValid && originalMaps[controlIndex] == pawn.Map.uniqueID;
 		}
 
 		private bool DiscardSavedPosition(int controlIndex) {
 			var hadPosition = savedPositions[controlIndex].IsValid;
 			savedPositions[controlIndex] = IntVec3.Invalid;
+			originalMaps[controlIndex] = InvalidMapValue;
 			return hadPosition;
 		}
 
@@ -131,17 +143,17 @@ namespace DefensivePositions {
 			if (!pawn.IsColonistPlayerControlled || pawn.Downed || pawn.drafter == null) return;
 			if (!pawn.Drafted) {
 				pawn.drafter.Drafted = true;
-				SoundDef.Named("DraftOn").PlayOneShotOnCamera();
+				DefensivePositionsManager.Instance.ScheduleSoundOnCamera(SoundDefOf.DraftOn);
 			}
 			var turret = TryFindMannableGunAtPosition(pawn, position);
 			if (turret != null) {
 				var newJob = new Job(JobDefOf.ManTurret, turret.parent);
-				pawn.drafter.TakeOrderedJob(newJob);
+				pawn.jobs.TryTakeOrderedJob(newJob);
 			} else {
-				var intVec = Pawn_DraftController.BestGotoDestNear(position, pawn);
+				var intVec = RCellFinder.BestOrderedGotoDestNear(position, pawn);
 				var job = new Job(JobDefOf.Goto, intVec) {playerForced = true};
-				pawn.drafter.TakeOrderedJob(job);
-				MoteMaker.MakeStaticMote(intVec, ThingDefOf.Mote_FeedbackGoto);
+				pawn.jobs.TryTakeOrderedJob(job);
+				MoteMaker.MakeStaticMote(intVec, pawn.Map, ThingDefOf.Mote_FeedbackGoto);
 			}
 		}
 
@@ -150,7 +162,7 @@ namespace DefensivePositions {
 			if (!forPawn.RaceProps.ToolUser) return null;
 			var cardinals = GenAdj.CardinalDirections;
 			for (int i = 0; i < cardinals.Length; i++) {
-				var things = Find.ThingGrid.ThingsListAt(cardinals[i] + position);
+				var things = forPawn.Map.thingGrid.ThingsListAt(cardinals[i] + position);
 				for (int j = 0; j < things.Count; j++) {
 					var thing = things[j] as ThingWithComps;
 					if (thing == null) continue;
@@ -166,8 +178,10 @@ namespace DefensivePositions {
 
 		private void InitalizePositionList() {
 			savedPositions = new List<IntVec3>(NumAdvancedPositionButtons);
+			originalMaps = new List<int>(NumAdvancedPositionButtons);
 			for (int i = 0; i < NumAdvancedPositionButtons; i++) {
 				savedPositions.Add(IntVec3.Invalid);
+				originalMaps.Add(InvalidMapValue);
 			}
 		}
 	}

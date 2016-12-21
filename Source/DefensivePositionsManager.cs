@@ -1,79 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using HugsLib;
-using RimWorld;
-using UnityEngine;
+using HugsLib.Settings;
+using HugsLib.Utils;
 using Verse;
+using Verse.Sound;
 
 namespace DefensivePositions {
 	/**
 	 * The hub of the mod. Stores the handlers for the individual colonists and other support info.
 	 */
-	public class DefensivePositionsManager : MapComponent {
+	public class DefensivePositionsManager : ModBase {
 		public static DefensivePositionsManager Instance { get; private set; }
 
+		public override string ModIdentifier {
+			get { return "DefensivePositions"; }
+		}
+
+		internal new ModLogger Logger {
+			get { return base.Logger; }
+		}
+
 		public bool AdvancedModeEnabled {
-			get { return advancedModeEnabled; }
+			get { return saveData.advancedModeEnabled; }
 		}
 
 		public int LastAdvancedControlUsed {
-			get { return lastAdvancedControlUsed; }
-			set { lastAdvancedControlUsed = value; }
+			get { return saveData.lastAdvancedControlUsed; }
+			set { saveData.lastAdvancedControlUsed = value; }
 		}
+
+		public List<PawnSquad> SquadData {
+			get { return saveData.pawnSquads; }
+		} 
 
 		public ScheduledReportManager Reporter { get; private set; }
 
+		public SettingHandle<bool> FirstSlotHotkeySetting { get; private set; }
+
+		private readonly PawnSquadHandler squadHandler;
+		private readonly MiscHotkeyHandler miscHotkeys;
 		private bool modeSwitchScheduled;
-		private MiscHotkeyHandler miscHotkeys;
+		private SoundDef scheduledSound;
+		private DefensivePositionsData saveData;
 
-		// saved fields
-		private bool advancedModeEnabled;
-		private int lastAdvancedControlUsed;
-		private Dictionary<int, PawnSavedPositionHandler> handlers = new Dictionary<int, PawnSavedPositionHandler>();
-		private PawnSquadHandler squads;
-
-		public DefensivePositionsManager() {
+		private DefensivePositionsManager() {
 			Instance = this;
-			Reporter = new ScheduledReportManager();
-			squads = new PawnSquadHandler();
+			squadHandler = new PawnSquadHandler();
 			miscHotkeys = new MiscHotkeyHandler();
-			TryDraftControllerDetour();
-			EnsureComponentIsActive();
+			Reporter = new ScheduledReportManager();
 		}
 
-		public override void ExposeData() {
-			base.ExposeData();
-			Scribe_Values.LookValue(ref advancedModeEnabled, "advancedModeEnabled", false);
-			Scribe_Values.LookValue(ref lastAdvancedControlUsed, "lastAdvancedControlUsed", 0);
-			Scribe_Collections.LookDictionary(ref handlers, "handlers", LookMode.Value, LookMode.Deep);
-			Scribe_Deep.LookDeep(ref squads, "squads");
-			if (Scribe.mode == LoadSaveMode.LoadingVars) {
-				if(handlers == null) handlers = new Dictionary<int, PawnSavedPositionHandler>();
-				if(squads == null) squads = new PawnSquadHandler();
-				lastAdvancedControlUsed = Mathf.Clamp(lastAdvancedControlUsed, 0, PawnSavedPositionHandler.NumAdvancedPositionButtons-1);
-			}
+		public override void DefsLoaded() {
+			FirstSlotHotkeySetting = Settings.GetHandle("firstSlotHotkey", "setting_hotkeyMode_label".Translate(), "setting_hotkeyMode_desc".Translate(), true);
 		}
 
-		public override void MapComponentUpdate() {
+		public override void WorldLoaded() {
+			saveData = UtilityWorldObjectManager.GetUtilityWorldObject<DefensivePositionsData>();
+		}
+
+		public override void FixedUpdate() {
+			if (Current.ProgramState != ProgramState.Playing) return;
 			if (modeSwitchScheduled) {
-				advancedModeEnabled = !advancedModeEnabled;
+				saveData.advancedModeEnabled = !saveData.advancedModeEnabled;
 				modeSwitchScheduled = false;
 			}
 			Reporter.Update();
+			if (scheduledSound != null) {
+				scheduledSound.PlayOneShotOnCamera();
+				scheduledSound = null;
+			}
 		}
 
-		public override void MapComponentOnGUI() {
-			squads.OnGUI();
+		public override void OnGUI() {
+			if (Current.ProgramState != ProgramState.Playing || saveData == null) return;
+			squadHandler.OnGUI();
 			miscHotkeys.OnGUI();
 		}
 
 		public PawnSavedPositionHandler GetHandlerForPawn(Pawn pawn) {
+			if(saveData == null) throw new Exception("Cannot get handler- saveData not loaded");
 			var pawnId = pawn.thingIDNumber;
 			PawnSavedPositionHandler handler;
-			if (!handlers.TryGetValue(pawnId, out handler)) {
+			if (!saveData.handlers.TryGetValue(pawnId, out handler)) {
 				handler = new PawnSavedPositionHandler();
-				handlers.Add(pawnId, handler);
+				saveData.handlers.Add(pawnId, handler);
 			}
 			handler.Owner = pawn;
 			return handler;
@@ -84,21 +95,8 @@ namespace DefensivePositions {
 			modeSwitchScheduled = true;
 		}
 
-		// ensure the component is active even on maps where the mod was not active at map creation
-		private void EnsureComponentIsActive() {
-			LongEventHandler.ExecuteWhenFinished(() => {
-				var components = Find.Map.components;
-				if (components.Any(c => c is DefensivePositionsManager)) return;
-				Find.Map.components.Add(this);
-			});
+		public void ScheduleSoundOnCamera(SoundDef sound) {
+			scheduledSound = sound;
 		}
-
-		private void TryDraftControllerDetour() {
-			var controllerMethod = typeof (Pawn_DraftController).GetMethod("GetGizmos", BindingFlags.Instance | BindingFlags.NonPublic);
-			var detouredMethod = typeof (DraftControllerDetour).GetMethod("_GetGizmos", BindingFlags.Static | BindingFlags.Public);
-			if (controllerMethod == null || detouredMethod == null) DefensivePositionsMod.Instance.Logger.Error("Failed to reflect required methods.");
-			DetourProvider.CompatibleDetour(controllerMethod, detouredMethod, DefensivePositionsMod.Instance.ModContentPack.Name);
-		}
-
 	}
 }

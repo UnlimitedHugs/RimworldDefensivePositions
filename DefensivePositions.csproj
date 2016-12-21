@@ -48,21 +48,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\DefensivePositionsMod.cs" />
-    <Compile Include="Source\DefensivePositionsUtility.cs" />
+    <Compile Include="Source\DefensivePositionsData.cs" />
+    <Compile Include="Source\DefensivePositionsManager.cs" />
     <Compile Include="Source\DraftControllerDetour.cs" />
     <Compile Include="Source\Gizmo_QuadButtonPanel.cs" />
-    <Compile Include="Source\DefensivePositionsManager.cs" />
     <Compile Include="Source\HotkeyDefOf.cs" />
     <Compile Include="Source\MiscHotkeyHandler.cs" />
     <Compile Include="Source\PawnSavedPositionHandler.cs" />
+    <Compile Include="Source\PawnSquad.cs" />
     <Compile Include="Source\PawnSquadHandler.cs" />
     <Compile Include="Source\ScheduledReportManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HugsLibChecker\HugsLibChecker.csproj">
+      <Project>{a7dea100-952b-4516-b020-b66c8bcb4b50}</Project>
+      <Name>HugsLibChecker</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HugsLib\HugsLib.csproj">
       <Project>{a5d9bd45-533c-4ca0-9298-8950a3da724c}</Project>
       <Name>HugsLib</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

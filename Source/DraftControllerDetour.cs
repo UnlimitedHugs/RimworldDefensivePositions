@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using HugsLib.Source.Detour;
 using RimWorld;
 using Verse;
 
@@ -10,6 +11,7 @@ namespace DefensivePositions {
 	 */
 	internal static class DraftControllerDetour {
 		//Pawn_DraftController: internal IEnumerable<Gizmo> GetGizmos()
+		[DetourMethod(typeof(Pawn_DraftController), "GetGizmos")]
 		public static IEnumerable<Gizmo> _GetGizmos(this Pawn_DraftController controller) {
 			var pawn = controller.pawn;
 			if(!pawn.IsColonistPlayerControlled) yield break;

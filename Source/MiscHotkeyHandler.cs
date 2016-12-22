@@ -62,25 +62,25 @@ namespace DefensivePositions {
 			}
 		}
 
-		// make sure to crate a new list, because the map pawn list can change during the operation (pawns carried by other pawns)
 		private IEnumerable<Pawn> GetColonistsOnVisibleMap() {
 			var map = Find.VisibleMap;
 			var result = new List<Pawn>();
 			if (map == null) return result;
 			var playerFaction = Faction.OfPlayer;
 			foreach (var pawn in map.mapPawns.AllPawnsSpawned) {
-				if (pawn.Faction == playerFaction) continue;
+				if (pawn.Faction != playerFaction || !pawn.IsColonist) continue;
 				result.Add(pawn);
 			}
 			return result;
-		} 
+		}
 
+		// make sure to crate a new list, because the map pawn list can change during the operation (pawns carried by other pawns)
 		private IEnumerable<Pawn> GetColonistsOnAllMaps() {
 			var result = new List<Pawn>();
 			var playerFaction = Faction.OfPlayer;
 			foreach (var map in Current.Game.Maps) {
 				foreach (var pawn in map.mapPawns.AllPawnsSpawned) {
-					if(pawn.Faction != playerFaction) continue;
+					if (pawn.Faction != playerFaction || !pawn.IsColonist) continue;
 					result.Add(pawn);
 				}
 			}

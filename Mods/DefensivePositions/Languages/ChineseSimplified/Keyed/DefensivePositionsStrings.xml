@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
 
-	<DefPos_basic_label>Defensive position</DefPos_basic_label>
-	<DefPos_basic_desc>Send colonist to their defensive position.
-Shift + click to set the position.
-Alt + click to switch to advanced mode.</DefPos_basic_desc>
-	<DefPos_advanced_label>Positions</DefPos_advanced_label>
-	<DefPos_advanced_desc>Send colonist to defensive position {0}.
-Shift + click to set the position.
-Control/Option + click to forget position.
-Alt + click to switch to basic mode.</DefPos_advanced_desc>
+	<DefPos_basic_label>防御位置</DefPos_basic_label>
+	<DefPos_basic_desc>派遣居民到他们的防御位置。
+Shift + click 来设定位置。
+Alt + click 来切换到高级模式。</DefPos_basic_desc>
+	<DefPos_advanced_label>位置</DefPos_advanced_label>
+	<DefPos_advanced_desc>派遣居民到防御位置 {0}。
+Shift + click 来设定位置。
+Control/Option + click 来取消已设定的位置。
+Alt + click 来切换到普通模式。</DefPos_advanced_desc>
 
 	<!-- button messages -->
-	<DefPos_msg_noposition>No defensive position set. Click the button while holding Shift to set it.</DefPos_msg_noposition>
-	<DefPos_msg_noposition_partial>Colonists missing defensive position: {0}</DefPos_msg_noposition_partial>
-	<DefPos_msg_basicSet>Defensive position has been set for {0} colonists.</DefPos_msg_basicSet>
-	<DefPos_msg_advancedSet>Defensive position {0} has been set for {1} colonists.</DefPos_msg_advancedSet>
-	<DefPos_msg_basicCleared>Cleared defensive position for {0} colonists.</DefPos_msg_basicCleared>
-	<DefPos_msg_advancedCleared>Cleared defensive position {0} for {1} colonists.</DefPos_msg_advancedCleared>
-	<DefPos_msg_clearFailed>None of the selected pawns had a defensive position to clear.</DefPos_msg_clearFailed>
+	<DefPos_msg_noposition>没有设定防御位置。 按住 Shift 然后点击图标来设定。</DefPos_msg_noposition>
+	<DefPos_msg_noposition_partial>下列居民没有设定防御位置: {0}</DefPos_msg_noposition_partial>
+	<DefPos_msg_basicSet>已为 {0} 位居民设定防御位置。</DefPos_msg_basicSet>
+	<DefPos_msg_advancedSet>已为防御位置 {0} 设定 {1} 位居民。</DefPos_msg_advancedSet>
+	<DefPos_msg_basicCleared>已为 {0} 位居民取消了防御位置。</DefPos_msg_basicCleared>
+	<DefPos_msg_advancedCleared>已为防御位置 {0} 取消了 {1} 位居民。</DefPos_msg_advancedCleared>
+	<DefPos_msg_clearFailed>所选择的居民没有防御位置来取消。</DefPos_msg_clearFailed>
 	
 	<!-- keyboard shortcut messages -->
-	<DefPos_msg_squadEmpty>No colonists assigned to squad {0}. Hold Control and press again to assign.</DefPos_msg_squadEmpty>
-	<DefPos_msg_squadCleared>No colonists selected. Squad {0} cleared.</DefPos_msg_squadCleared>
-	<DefPos_msg_squadAssigned>Assigned {0} colonists to squad {1}.</DefPos_msg_squadAssigned>
-	<DefPos_msg_selectedAll>All colonists selected.</DefPos_msg_selectedAll>
-	<DefPos_msg_sentAll>Sent {0} colonists to defensive positions.</DefPos_msg_sentAll>
-	<DefPos_msg_nopositionAll>None of the colonists have a defensive position set.</DefPos_msg_nopositionAll>
-	<DefPos_msg_undraftedAll>Undrafted {0} colonists.</DefPos_msg_undraftedAll>
-	<DefPos_msg_nooneDrafted>All colonists are already undrafted.</DefPos_msg_nooneDrafted>
+	<DefPos_msg_squadEmpty>没有居民分配到小队 {0}。 按住 Control 然后按按键来分配。</DefPos_msg_squadEmpty>
+	<DefPos_msg_squadCleared>没有选择任何居民。 小队 {0} 已清空。</DefPos_msg_squadCleared>
+	<DefPos_msg_squadAssigned>已分配 {0} 位居民到小队 {1}。</DefPos_msg_squadAssigned>
+	<DefPos_msg_selectedAll>已选择所有居民。</DefPos_msg_selectedAll>
+	<DefPos_msg_sentAll>派遣 {0} 位居民到防御位置。</DefPos_msg_sentAll>
+	<DefPos_msg_nopositionAll>居民都没有设定防御位置。</DefPos_msg_nopositionAll>
+	<DefPos_msg_undraftedAll>解散 {0} 位居民。</DefPos_msg_undraftedAll>
+	<DefPos_msg_nooneDrafted>所有居民都已经解散。</DefPos_msg_nooneDrafted>
 	
-	<setting_hotkeyMode_label>Hotkey activates first slot only</setting_hotkeyMode_label>
-	<setting_hotkeyMode_desc>When enabled, in advanced mode the button hotkey will always activate the first save slot. When disabled, the hotkey will activate the most recently used slot.</setting_hotkeyMode_desc>
+	<setting_hotkeyMode_label>快捷键只激活第一个位置</setting_hotkeyMode_label>
+	<setting_hotkeyMode_desc>选择后，在高级模式使用快捷键只会激活第一个保存的位置。 取消后，快捷键只会激活最近使用的位置。</setting_hotkeyMode_desc>
 	
 </LanguageData>

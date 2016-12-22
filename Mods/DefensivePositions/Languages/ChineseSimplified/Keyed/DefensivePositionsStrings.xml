@@ -12,7 +12,7 @@ Control/Option + click 来取消已设定的位置。
 Alt + click 来切换到普通模式。</DefPos_advanced_desc>
 
 	<!-- button messages -->
-	<DefPos_msg_noposition>没有设定防御位置。 按住 Shift 然后点击图标来设定。</DefPos_msg_noposition>
+	<DefPos_msg_noposition>没有设定防御位置。按住 Shift 然后点击图标来设定。</DefPos_msg_noposition>
 	<DefPos_msg_noposition_partial>下列居民没有设定防御位置: {0}</DefPos_msg_noposition_partial>
 	<DefPos_msg_basicSet>已为 {0} 位居民设定防御位置。</DefPos_msg_basicSet>
 	<DefPos_msg_advancedSet>已为防御位置 {0} 设定 {1} 位居民。</DefPos_msg_advancedSet>
@@ -21,8 +21,8 @@ Alt + click 来切换到普通模式。</DefPos_advanced_desc>
 	<DefPos_msg_clearFailed>所选择的居民没有防御位置来取消。</DefPos_msg_clearFailed>
 	
 	<!-- keyboard shortcut messages -->
-	<DefPos_msg_squadEmpty>没有居民分配到小队 {0}。 按住 Control 然后按按键来分配。</DefPos_msg_squadEmpty>
-	<DefPos_msg_squadCleared>没有选择任何居民。 小队 {0} 已清空。</DefPos_msg_squadCleared>
+	<DefPos_msg_squadEmpty>没有居民分配到小队 {0}。按住 Control 然后按按键来分配。</DefPos_msg_squadEmpty>
+	<DefPos_msg_squadCleared>没有选择任何居民。小队 {0} 已清空。</DefPos_msg_squadCleared>
 	<DefPos_msg_squadAssigned>已分配 {0} 位居民到小队 {1}。</DefPos_msg_squadAssigned>
 	<DefPos_msg_selectedAll>已选择所有居民。</DefPos_msg_selectedAll>
 	<DefPos_msg_sentAll>派遣 {0} 位居民到防御位置。</DefPos_msg_sentAll>
@@ -31,6 +31,6 @@ Alt + click 来切换到普通模式。</DefPos_advanced_desc>
 	<DefPos_msg_nooneDrafted>所有居民都已经解散。</DefPos_msg_nooneDrafted>
 	
 	<setting_hotkeyMode_label>快捷键只激活第一个位置</setting_hotkeyMode_label>
-	<setting_hotkeyMode_desc>选择后，在高级模式使用快捷键只会激活第一个保存的位置。 取消后，快捷键只会激活最近使用的位置。</setting_hotkeyMode_desc>
+	<setting_hotkeyMode_desc>选择后，在高级模式使用快捷键只会激活第一个保存的位置。取消后，快捷键只会激活最近使用的位置。</setting_hotkeyMode_desc>
 	
 </LanguageData>

@@ -9,12 +9,13 @@ namespace DefensivePositions {
 	 * The new method reporoduces the vanilla draft toggle and displays our custom position button.
 	 * TODO: when updating, check that the vanilla draft toggle still provides the same behaviour 
 	 */
+
 	internal static class DraftControllerDetour {
 		//Pawn_DraftController: internal IEnumerable<Gizmo> GetGizmos()
-		[DetourMethod(typeof(Pawn_DraftController), "GetGizmos")]
+		[DetourMethod(typeof (Pawn_DraftController), "GetGizmos")]
 		public static IEnumerable<Gizmo> _GetGizmos(this Pawn_DraftController controller) {
 			var pawn = controller.pawn;
-			if(!pawn.IsColonistPlayerControlled) yield break;
+			if (!pawn.IsColonistPlayerControlled) yield break;
 
 			var draftToggle = new Command_Toggle {
 				hotKey = KeyBindingDefOf.CommandColonistDraft,
@@ -43,7 +44,18 @@ namespace DefensivePositions {
 			if (!draftToggle.disabled) {
 				yield return DefensivePositionsManager.Instance.GetHandlerForPawn(pawn).GetGizmo(pawn);
 			}
+
+			if (controller.Drafted && pawn.equipment.Primary != null && pawn.equipment.Primary.def.IsRangedWeapon) {
+				yield return new Command_Toggle {
+					hotKey = KeyBindingDefOf.Misc6,
+					isActive = (() => controller.AllowFiring),
+					toggleAction = delegate { controller.AllowFiring = !controller.AllowFiring; },
+					icon = TexCommand.AllowFiring,
+					defaultLabel = "CommandAllowFiringLabel".Translate(),
+					defaultDesc = "CommandAllowFiringDesc".Translate(),
+					tutorTag = "AllowFiringToggle"
+				};
+			}
 		}
-		 
 	}
 }

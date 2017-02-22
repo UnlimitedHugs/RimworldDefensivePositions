@@ -1,36 +1,36 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
 
-	<DefPos_basic_label>防御位置</DefPos_basic_label>
-	<DefPos_basic_desc>派遣居民到他们的防御位置。
-Shift + click 来设定位置。
-Alt + click 来切换到高级模式。</DefPos_basic_desc>
-	<DefPos_advanced_label>位置</DefPos_advanced_label>
-	<DefPos_advanced_desc>派遣居民到防御位置 {0} 。
-Shift + click 来设定位置。
-Control/Option + click 来取消已设定的位置。
-Alt + click 来切换到普通模式。</DefPos_advanced_desc>
+  <DefPos_basic_label>防御位置</DefPos_basic_label>
+  <DefPos_basic_desc>派遣殖民者前往他们的防御位置。
+按住Shift并点击来设定位置。
+按住Alt并点击来切换到高级模式。</DefPos_basic_desc>
+  <DefPos_advanced_label>位置</DefPos_advanced_label>
+  <DefPos_advanced_desc>派遣殖民者到防御位置 {0} 。
+按住Shift并点击来设定位置。
+按住Ctrl或Option并点击来清除已设定的位置。
+按住Alt并点击来切换到基础模式。</DefPos_advanced_desc>
 
-	<!-- button messages -->
-	<DefPos_msg_noposition>没有设定防御位置。按住 Shift 然后点击图标来设定。</DefPos_msg_noposition>
-	<DefPos_msg_noposition_partial>下列居民没有设定防御位置: {0}</DefPos_msg_noposition_partial>
-	<DefPos_msg_basicSet>已为 {0} 位居民设定防御位置。</DefPos_msg_basicSet>
-	<DefPos_msg_advancedSet>已为防御位置 {0} 设定 {1} 位居民。</DefPos_msg_advancedSet>
-	<DefPos_msg_basicCleared>已为 {0} 位居民取消了防御位置。</DefPos_msg_basicCleared>
-	<DefPos_msg_advancedCleared>已为防御位置 {0} 取消了 {1} 位居民。</DefPos_msg_advancedCleared>
-	<DefPos_msg_clearFailed>所选择的居民没有防御位置来取消。</DefPos_msg_clearFailed>
-	
-	<!-- keyboard shortcut messages -->
-	<DefPos_msg_squadEmpty>没有居民被分配到小队 {0} 。按住 Control 然后按按键来分配。</DefPos_msg_squadEmpty>
-	<DefPos_msg_squadCleared>没有选择任何居民。小队 {0} 已清空。</DefPos_msg_squadCleared>
-	<DefPos_msg_squadAssigned>已分配 {0} 位居民到小队 {1} 。</DefPos_msg_squadAssigned>
-	<DefPos_msg_selectedAll>已选择所有居民。</DefPos_msg_selectedAll>
-	<DefPos_msg_sentAll>派遣 {0} 位居民到防御位置。</DefPos_msg_sentAll>
-	<DefPos_msg_nopositionAll>居民都没有设定防御位置。</DefPos_msg_nopositionAll>
-	<DefPos_msg_undraftedAll>解散 {0} 位居民。</DefPos_msg_undraftedAll>
-	<DefPos_msg_nooneDrafted>所有居民都已经解散。</DefPos_msg_nooneDrafted>
-	
-	<setting_hotkeyMode_label>快捷键只激活第一个位置</setting_hotkeyMode_label>
-	<setting_hotkeyMode_desc>选择后，在高级模式使用快捷键只会激活第一个保存的位置。取消后，快捷键只会激活最近使用的位置。</setting_hotkeyMode_desc>
-	
+  <!-- button messages -->
+  <DefPos_msg_noposition>未设定防御位置。按住Shift并点击按钮来设定。</DefPos_msg_noposition>
+  <DefPos_msg_noposition_partial>下列殖民者未设定防御位置： {0}</DefPos_msg_noposition_partial>
+  <DefPos_msg_basicSet>已为{0}位殖民者设定防御位置。</DefPos_msg_basicSet>
+  <DefPos_msg_advancedSet>已为{1}位殖民者設定防御位置{0}。</DefPos_msg_advancedSet>
+  <DefPos_msg_basicCleared>已为{0}位殖民者清除防御位置。</DefPos_msg_basicCleared>
+  <DefPos_msg_advancedCleared>已为{1}位殖民者清除防御位置{0}。</DefPos_msg_advancedCleared>
+  <DefPos_msg_clearFailed>所选单位均无可清除的防御位置。</DefPos_msg_clearFailed>
+
+  <!-- keyboard shortcut messages -->
+  <DefPos_msg_squadEmpty>编队{0}未分配有殖民者。按住Ctrl或Option并再次点击来分配。</DefPos_msg_squadEmpty>
+  <DefPos_msg_squadCleared>没有选择任何殖民者。编队{0}已清空。</DefPos_msg_squadCleared>
+  <DefPos_msg_squadAssigned>已分配{0}位殖民者到编队{1}。</DefPos_msg_squadAssigned>
+  <DefPos_msg_selectedAll>已选择所有殖民者。</DefPos_msg_selectedAll>
+  <DefPos_msg_sentAll>已派遣{0}位殖民者前往防御位置。</DefPos_msg_sentAll>
+  <DefPos_msg_nopositionAll>居民都均未设定防御位置。</DefPos_msg_nopositionAll>
+  <DefPos_msg_undraftedAll>已解散{0}位殖民者。</DefPos_msg_undraftedAll>
+  <DefPos_msg_nooneDrafted>所有居民均已经解散。</DefPos_msg_nooneDrafted>
+
+  <setting_hotkeyMode_label>快捷键只激活第一个位置</setting_hotkeyMode_label>
+  <setting_hotkeyMode_desc>开启后，高级模式中快捷键只会激活的第一个保存的位置。关闭后，快捷键会激活最近使用的位置。</setting_hotkeyMode_desc>
+
 </LanguageData>

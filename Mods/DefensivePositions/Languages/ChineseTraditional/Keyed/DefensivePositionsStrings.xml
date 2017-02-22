@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <DefPos_basic_label>防禦位置</DefPos_basic_label>
+  <DefPos_basic_desc>派遣殖民者前往他們的防禦位置。
+按住Shift並點按來設定位置。
+按住Alt並點按來切換到高級模式。</DefPos_basic_desc>
+  <DefPos_advanced_label>位置</DefPos_advanced_label>
+  <DefPos_advanced_desc>派遣殖民者前往防禦位置 {0} 。
+按住Shift並點按來設定位置。
+按住Ctrl或Option並點按來清除已設定的位置。
+按住Alt並點按來切換到基礎模式。</DefPos_advanced_desc>
+
+  <!-- button messages -->
+  <DefPos_msg_noposition>未設定防禦位置。按住Shift並點按按鈕來設定。</DefPos_msg_noposition>
+  <DefPos_msg_noposition_partial>下列殖民者未设定防禦位置： {0}</DefPos_msg_noposition_partial>
+  <DefPos_msg_basicSet>已為{0}位殖民者設定防禦位置。</DefPos_msg_basicSet>
+  <DefPos_msg_advancedSet>已為{1}位殖民者設定防禦位置{0}。</DefPos_msg_advancedSet>
+  <DefPos_msg_basicCleared>已為{0}位殖民者清除防禦位置。</DefPos_msg_basicCleared>
+  <DefPos_msg_advancedCleared>已為{1}位殖民者清除防禦位置{0}。</DefPos_msg_advancedCleared>
+  <DefPos_msg_clearFailed>所選單位均無可清除的防禦位置。</DefPos_msg_clearFailed>
+
+  <!-- keyboard shortcut messages -->
+  <DefPos_msg_squadEmpty>編隊{0}未分配有殖民者。按住Ctrl或Option並再次點按來分配。</DefPos_msg_squadEmpty>
+  <DefPos_msg_squadCleared>未選擇任何殖民者。編隊{0}已清空。</DefPos_msg_squadCleared>
+  <DefPos_msg_squadAssigned>已分配{0}位殖民者到編隊{1}。</DefPos_msg_squadAssigned>
+  <DefPos_msg_selectedAll>已選擇所有殖民者。</DefPos_msg_selectedAll>
+  <DefPos_msg_sentAll>已派遣{0}位殖民者前往防禦位置。</DefPos_msg_sentAll>
+  <DefPos_msg_nopositionAll>殖民者均未設定防禦位置。</DefPos_msg_nopositionAll>
+  <DefPos_msg_undraftedAll>已解散{0}位殖民者。</DefPos_msg_undraftedAll>
+  <DefPos_msg_nooneDrafted>所有殖民者均已解散。</DefPos_msg_nooneDrafted>
+
+  <setting_hotkeyMode_label>快捷鍵只激活第一個位置。</setting_hotkeyMode_label>
+  <setting_hotkeyMode_desc>開啟後，高級模式中快捷鍵只會激活第一個保存的位置。關閉後，快捷鍵會激活最近使用的位置。</setting_hotkeyMode_desc>
+
+</LanguageData>

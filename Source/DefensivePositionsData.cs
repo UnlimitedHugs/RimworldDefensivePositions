@@ -13,10 +13,10 @@ namespace DefensivePositions {
 		
 		public override void ExposeData() {
 			base.ExposeData();
-			Scribe_Values.LookValue(ref advancedModeEnabled, "advancedModeEnabled", false);
-			Scribe_Values.LookValue(ref lastAdvancedControlUsed, "lastAdvancedControlUsed", 0);
-			Scribe_Collections.LookDictionary(ref handlers, "handlers", LookMode.Value, LookMode.Deep);
-			Scribe_Collections.LookList(ref pawnSquads, "pawnSquads", LookMode.Deep);
+			Scribe_Values.Look(ref advancedModeEnabled, "advancedModeEnabled", false);
+			Scribe_Values.Look(ref lastAdvancedControlUsed, "lastAdvancedControlUsed", 0);
+			Scribe_Collections.Look(ref handlers, "handlers", LookMode.Value, LookMode.Deep);
+			Scribe_Collections.Look(ref pawnSquads, "pawnSquads", LookMode.Deep);
 			if (Scribe.mode == LoadSaveMode.LoadingVars) {
 				if (handlers == null) handlers = new Dictionary<int, PawnSavedPositionHandler>();
 				if (pawnSquads == null) pawnSquads = new List<PawnSquad>();

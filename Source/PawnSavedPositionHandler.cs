@@ -35,8 +35,8 @@ namespace DefensivePositions {
 		}
 
 		public void ExposeData() {
-			Scribe_Collections.LookList(ref savedPositions, "savedPositions", LookMode.Value);
-			Scribe_Collections.LookList(ref originalMaps, "originalMaps", LookMode.Value);
+			Scribe_Collections.Look(ref savedPositions, "savedPositions", LookMode.Value);
+			Scribe_Collections.Look(ref originalMaps, "originalMaps", LookMode.Value);
 			if (Scribe.mode == LoadSaveMode.LoadingVars && savedPositions == null) {
 				InitalizePositionList();
 			}

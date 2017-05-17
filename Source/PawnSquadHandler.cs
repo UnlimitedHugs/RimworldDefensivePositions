@@ -95,7 +95,7 @@ namespace DefensivePositions {
 					}
 				} else if (matchingCaravan != null) {
 					// select caravan with pawns
-					JumpToTargetUtility.TryJumpAndSelect(matchingCaravan);
+					CameraJumper.TryJumpAndSelect(matchingCaravan);
 				} else {
 					Messages.Message("DefPos_msg_squadEmpty".Translate(squadNumber), MessageSound.RejectInput);
 				}
@@ -148,11 +148,11 @@ namespace DefensivePositions {
 				sum += pawn.Position;
 			}
 			var average = new IntVec3(sum.x/pawns.Count, 0, sum.z/pawns.Count);
-			JumpToTargetUtility.TryJump(new GlobalTargetInfo(average, pawns[0].Map));
+			CameraJumper.TryJump(new GlobalTargetInfo(average, pawns[0].Map));
 		}
 
 		private bool InWorldView() {
-			return Find.MainTabsRoot.OpenTab == MainTabDefOf.World;
+			return Find.MainTabsRoot.OpenTab == MainButtonDefOf.World;
 		}
 
 		private void TryEscapeWorldView() {

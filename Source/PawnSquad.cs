@@ -14,8 +14,8 @@ namespace DefensivePositions {
 		}
 
 		public void ExposeData() {
-			Scribe_Values.LookValue(ref squadId, "squadId", 0);
-			Scribe_Collections.LookList(ref pawnIds, "pawnIds", LookMode.Value);
+			Scribe_Values.Look(ref squadId, "squadId", 0);
+			Scribe_Collections.Look(ref pawnIds, "pawnIds", LookMode.Value);
 			if (pawnIds == null) pawnIds = new List<int>();
 		}
 	}

@@ -10,9 +10,26 @@ Alt + click para cambiar al modo avanzado.</DefPos_basic_desc>
 Shift + click para establecer la posición.
 Alt + click para cambiar al modo básico.</DefPos_advanced_desc>
 
-	<DefPos_msg_noposition>No se ha establecido una posición defensiva. Haga clic en el botón mientras mantiene shift para establecerla.</DefPos_msg_noposition>
-	<DefPos_msg_noposition_partial>Colonos sin una posición defensiva establecida: {0}</DefPos_msg_noposition_partial>
-	<DefPos_msg_basicSet>Posición defensiva establecida para {0} colono/s.</DefPos_msg_basicSet>
-	<DefPos_msg_advancedSet>Posición defensiva {0} se ha establecido para {1} colono/s.</DefPos_msg_advancedSet>
-
+	<!-- button messages -->
+	<DefPos_msg_noposition>Ningúna posición defensiva establecida. Haga clic en el botón mientras mantiene pulsada la tecla Shift para establecerla.</DefPos_msg_noposition>
+	<DefPos_msg_noposition_partial>Colonos sin posición defensiva: {0}</DefPos_msg_noposition_partial>
+	<DefPos_msg_basicSet>Se ha establecido una posición defensiva para {0} colono/s.</DefPos_msg_basicSet>
+	<DefPos_msg_advancedSet>Posición defensiva {0} establecida para {1} colono/s.</DefPos_msg_advancedSet>
+	<DefPos_msg_basicCleared>Posición defensiva eliminada para {0} colono/s.</DefPos_msg_basicCleared>
+	<DefPos_msg_advancedCleared>Posición defensiva eliminada {0} para {1} colono/s.</DefPos_msg_advancedCleared>
+	<DefPos_msg_clearFailed>Ninguno de los peones seleccionados tenía una posición defensiva para eliminar.</DefPos_msg_clearFailed>
+	
+	<!-- keyboard shortcut messages -->
+	<DefPos_msg_squadEmpty>Ningún colono asignado a la escuadra {0}. Mantenga pulsada la tecla Control y vuelva a pulsar para asignar.</DefPos_msg_squadEmpty>
+	<DefPos_msg_squadCleared>No se seleccionaron colonos. Escuadra {0} borrada.</DefPos_msg_squadCleared>
+	<DefPos_msg_squadAssigned>Asignado/s {0} colono/s a la escuadra {1}.</DefPos_msg_squadAssigned>
+	<DefPos_msg_selectedAll>Todos los colonos seleccionados.</DefPos_msg_selectedAll>
+	<DefPos_msg_sentAll>Enviar {0} colonos a posiciones defensivas.</DefPos_msg_sentAll>
+	<DefPos_msg_nopositionAll>Ninguno de los colonos tiene una posición defensiva establecida.</DefPos_msg_nopositionAll>
+	<DefPos_msg_undraftedAll>Liberados {0} colono/s.</DefPos_msg_undraftedAll>
+	<DefPos_msg_nooneDrafted>Todos los colonos ya están liberados.</DefPos_msg_nooneDrafted>
+	
+	<setting_hotkeyMode_label>La tecla de acceso rápido activa la primera ranura</setting_hotkeyMode_label>
+	<setting_hotkeyMode_desc>Cuando está activado, en modo avanzado, la tecla de acceso rápido del botón activará siempre la primera ranura. Cuando está desactivada, la tecla de acceso rápido activará la ranura utilizada más recientemente.</setting_hotkeyMode_desc>
+	
 </LanguageData>

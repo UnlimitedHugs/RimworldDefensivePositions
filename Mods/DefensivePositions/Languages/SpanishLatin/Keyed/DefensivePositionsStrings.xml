@@ -11,7 +11,7 @@ Shift + click para establecer la posición.
 Alt + click para cambiar al modo básico.</DefPos_advanced_desc>
 
 	<!-- button messages -->
-	<DefPos_msg_noposition>Ningúna posición defensiva establecida. Haga clic en el botón mientras mantiene pulsada la tecla Mayús para establecerla.</DefPos_msg_noposition>
+	<DefPos_msg_noposition>Ningúna posición defensiva establecida. Haga clic en el botón mientras mantiene pulsada la tecla Shift para establecerla.</DefPos_msg_noposition>
 	<DefPos_msg_noposition_partial>Colonos sin posición defensiva: {0}</DefPos_msg_noposition_partial>
 	<DefPos_msg_basicSet>Se ha establecido una posición defensiva para {0} colono/s.</DefPos_msg_basicSet>
 	<DefPos_msg_advancedSet>Posición defensiva {0} establecida para {1} colono/s.</DefPos_msg_advancedSet>

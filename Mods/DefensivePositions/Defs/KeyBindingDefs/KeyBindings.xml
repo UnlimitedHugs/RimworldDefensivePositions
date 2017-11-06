@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
-<KeyBindingDefs>
+<Defs>
 	<KeyBindingDef Name="BaseKeyBinding" Abstract="true">
 		<defName>BaseKeyBinding</defName>
 		<category>DefensivePositions</category>
@@ -77,4 +77,4 @@
 		<defaultKeyCodeA>Keypad9</defaultKeyCodeA>
 	</KeyBindingDef>
 	
-</KeyBindingDefs>
+</Defs>

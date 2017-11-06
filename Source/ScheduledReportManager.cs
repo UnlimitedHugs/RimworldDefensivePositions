@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using RimWorld;
+using Verse;
 
 namespace DefensivePositions {
 	/**
@@ -27,28 +28,28 @@ namespace DefensivePositions {
 			if (report == null) return;
 			if (report.reportType == ReportType.SavedPosition) {
 				if (DefensivePositionsManager.Instance.AdvancedModeEnabled) {
-					Messages.Message(string.Format("DefPos_msg_advancedSet".Translate(), report.controlIndex + 1, report.numPawnsSavedPosition), MessageSound.Benefit);
+					Messages.Message(string.Format("DefPos_msg_advancedSet".Translate(), report.controlIndex + 1, report.numPawnsSavedPosition), MessageTypeDefOf.TaskCompletion);
 				} else {
-					Messages.Message(string.Format("DefPos_msg_basicSet".Translate(), report.numPawnsSavedPosition), MessageSound.Benefit);
+					Messages.Message(string.Format("DefPos_msg_basicSet".Translate(), report.numPawnsSavedPosition), MessageTypeDefOf.TaskCompletion);
 				}
 			} else if (report.reportType == ReportType.SentToSavedPosition) {
 				if (report.numPawnsHadNoTargetPosition > 0) {
 					if (report.numPawnsHadTargetPosition == 0) {
 						// no pawns had a valid position
-						Messages.Message("DefPos_msg_noposition".Translate(), MessageSound.RejectInput);
+						Messages.Message("DefPos_msg_noposition".Translate(), MessageTypeDefOf.RejectInput);
 					} else if (report.numPawnsHadTargetPosition > 0) {
 						// some pawns had valid positions
-						Messages.Message(string.Format("DefPos_msg_noposition_partial".Translate(), report.noTargetPositionNames), MessageSound.Silent);
+						Messages.Message(string.Format("DefPos_msg_noposition_partial".Translate(), report.noTargetPositionNames), MessageTypeDefOf.SilentInput);
 					}
 				}
 			} else if (report.reportType == ReportType.ClearedPosition) {
 				if (report.numPawnsHadTargetPosition == 0) {
-					Messages.Message("DefPos_msg_clearFailed".Translate(), MessageSound.RejectInput);
+					Messages.Message("DefPos_msg_clearFailed".Translate(), MessageTypeDefOf.RejectInput);
 				} else {
 					if (DefensivePositionsManager.Instance.AdvancedModeEnabled) {
-						Messages.Message("DefPos_msg_advancedCleared".Translate(report.controlIndex + 1, report.numPawnsHadTargetPosition), MessageSound.Benefit);
+						Messages.Message("DefPos_msg_advancedCleared".Translate(report.controlIndex + 1, report.numPawnsHadTargetPosition), MessageTypeDefOf.TaskCompletion);
 					} else {
-						Messages.Message("DefPos_msg_basicCleared".Translate(report.numPawnsHadTargetPosition), MessageSound.Benefit);
+						Messages.Message("DefPos_msg_basicCleared".Translate(report.numPawnsHadTargetPosition), MessageTypeDefOf.TaskCompletion);
 					}
 				}
 			}

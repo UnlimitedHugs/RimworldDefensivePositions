@@ -27,7 +27,7 @@ namespace DefensivePositions {
 			foreach (var pawn in GetColonistsOnVisibleMap()) {
 				Find.Selector.Select(pawn);
 			}
-			Messages.Message("DefPos_msg_selectedAll".Translate(), MessageSound.Silent);
+			Messages.Message("DefPos_msg_selectedAll".Translate(), MessageTypeDefOf.SilentInput);
 		}
 
 		private void SendAllColonistsToDefensivePosition() {
@@ -40,9 +40,9 @@ namespace DefensivePositions {
 				}
 			}
 			if (hits > 0) {
-				Messages.Message("DefPos_msg_sentAll".Translate(hits), MessageSound.Silent);
+				Messages.Message("DefPos_msg_sentAll".Translate(hits), MessageTypeDefOf.SilentInput);
 			} else {
-				Messages.Message("DefPos_msg_nopositionAll".Translate(), MessageSound.RejectInput);
+				Messages.Message("DefPos_msg_nopositionAll".Translate(), MessageTypeDefOf.RejectInput);
 			}
 		}
 
@@ -55,10 +55,10 @@ namespace DefensivePositions {
 				}
 			}
 			if (hits > 0) {
-				Messages.Message("DefPos_msg_undraftedAll".Translate(hits), MessageSound.Silent);
+				Messages.Message("DefPos_msg_undraftedAll".Translate(hits), MessageTypeDefOf.SilentInput);
 				SoundDefOf.DraftOff.PlayOneShotOnCamera();
 			} else {
-				Messages.Message("DefPos_msg_nooneDrafted".Translate(), MessageSound.RejectInput);
+				Messages.Message("DefPos_msg_nooneDrafted".Translate(), MessageTypeDefOf.RejectInput);
 			}
 		}
 

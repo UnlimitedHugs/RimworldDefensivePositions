@@ -59,7 +59,7 @@ namespace DefensivePositions {
 				}
 				if (idList.Count > 0) {
 					// reassign squad with selected pawns
-					Messages.Message("DefPos_msg_squadAssigned".Translate(idList.Count, squadNumber), MessageSound.Benefit);
+					Messages.Message("DefPos_msg_squadAssigned".Translate(idList.Count, squadNumber), MessageTypeDefOf.TaskCompletion);
 					if (squad == null) {
 						squad = new PawnSquad {squadId = squadNumber};
 						pawnSquads.Add(squad);
@@ -67,7 +67,7 @@ namespace DefensivePositions {
 					squad.pawnIds = idList;
 				} else {
 					// no pawns selected, clear squad
-					Messages.Message("DefPos_msg_squadCleared".Translate(squadNumber), MessageSound.Benefit);
+					Messages.Message("DefPos_msg_squadCleared".Translate(squadNumber), MessageTypeDefOf.TaskCompletion);
 					if (squad != null) pawnSquads.Remove(squad);
 				}
 			} else {
@@ -97,7 +97,7 @@ namespace DefensivePositions {
 					// select caravan with pawns
 					CameraJumper.TryJumpAndSelect(matchingCaravan);
 				} else {
-					Messages.Message("DefPos_msg_squadEmpty".Translate(squadNumber), MessageSound.RejectInput);
+					Messages.Message("DefPos_msg_squadEmpty".Translate(squadNumber), MessageTypeDefOf.RejectInput);
 				}
 			}
 		}

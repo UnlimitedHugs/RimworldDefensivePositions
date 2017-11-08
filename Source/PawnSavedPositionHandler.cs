@@ -35,14 +35,14 @@ namespace DefensivePositions {
 		// ---
 
 		public PawnSavedPositionHandler() {
-			InitalizePositionList();
+			InitializePositionList();
 		}
 
 		public void ExposeData() {
 			Scribe_Collections.Look(ref savedPositions, "savedPositions", LookMode.Value);
 			Scribe_Collections.Look(ref originalMaps, "originalMaps", LookMode.Value);
 			if (Scribe.mode == LoadSaveMode.LoadingVars && savedPositions == null) {
-				InitalizePositionList();
+				InitializePositionList();
 			}
 		}
 
@@ -139,14 +139,14 @@ namespace DefensivePositions {
 			}
 		}
 
-		private void SetDefensivePosition(Pawn pawn, int postionIndex) {
+		private void SetDefensivePosition(Pawn pawn, int positionIndex) {
 			var targetPos = pawn.Position;
 			var curPawnJob = pawn.jobs.curJob;
 			if (pawn.Drafted && curPawnJob != null && curPawnJob.def == JobDefOf.Goto) {
 				targetPos = curPawnJob.targetA.Cell;
 			}
-			savedPositions[postionIndex] = targetPos;
-			originalMaps[postionIndex] = pawn.Map.uniqueID;
+			savedPositions[positionIndex] = targetPos;
+			originalMaps[positionIndex] = pawn.Map.uniqueID;
 		}
 
 		// ensures that control index has a saved position and that position was saved on the map the pawn is on
@@ -198,7 +198,7 @@ namespace DefensivePositions {
 			return null;
 		}
 
-		private void InitalizePositionList() {
+		private void InitializePositionList() {
 			savedPositions = new List<IntVec3>(NumAdvancedPositionButtons);
 			originalMaps = new List<int>(NumAdvancedPositionButtons);
 			for (int i = 0; i < NumAdvancedPositionButtons; i++) {

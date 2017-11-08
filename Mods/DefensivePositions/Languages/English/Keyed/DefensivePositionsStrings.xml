@@ -25,12 +25,18 @@ Alt + click to switch to basic mode.</DefPos_advanced_desc>
 	<DefPos_msg_squadCleared>No colonists selected. Squad {0} cleared.</DefPos_msg_squadCleared>
 	<DefPos_msg_squadAssigned>Assigned {0} colonists to squad {1}.</DefPos_msg_squadAssigned>
 	<DefPos_msg_selectedAll>All colonists selected.</DefPos_msg_selectedAll>
-	<DefPos_msg_sentAll>Sent {0} colonists to defensive positions.</DefPos_msg_sentAll>
-	<DefPos_msg_nopositionAll>None of the colonists have a defensive position set.</DefPos_msg_nopositionAll>
+	<DefPos_msg_sentAllSlot>Sent {0} colonists to defensive position {1}.</DefPos_msg_sentAllSlot>
+	<DefPos_msg_nopositionAllSlot>None of the colonists have a defensive position set in slot {0}.</DefPos_msg_nopositionAllSlot>
 	<DefPos_msg_undraftedAll>Undrafted {0} colonists.</DefPos_msg_undraftedAll>
 	<DefPos_msg_nooneDrafted>All colonists are already undrafted.</DefPos_msg_nooneDrafted>
 	
-	<setting_hotkeyMode_label>Hotkey activates first slot only</setting_hotkeyMode_label>
-	<setting_hotkeyMode_desc>When enabled, in advanced mode the button hotkey will always activate the first save slot. When disabled, the hotkey will activate the most recently used slot.</setting_hotkeyMode_desc>
+	<setting_slotHotkeyMode_label>Hotkey mode</setting_slotHotkeyMode_label>
+	<setting_slotHotkeyMode_desc>Sets the behavior of the keyboard shortcuts for advanced mode:
+&lt;b&gt;First slot only:&lt;/b&gt; always activates the first slot.
+&lt;b&gt;Last slot used:&lt;/b&gt; activates the last slot that was clicked.
+&lt;b&gt;Multi-press:&lt;/b&gt; press the key 1-4 times in a row to activate the corresponding slot.</setting_slotHotkeyMode_desc>
+	<setting_slotHotkeyMode_FirstSlotOnly>First slot only</setting_slotHotkeyMode_FirstSlotOnly>
+	<setting_slotHotkeyMode_LastUsedSlot>Last slot used</setting_slotHotkeyMode_LastUsedSlot>
+	<setting_slotHotkeyMode_MultiPress>Multi-press</setting_slotHotkeyMode_MultiPress>
 	
 </LanguageData>

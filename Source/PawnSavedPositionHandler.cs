@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HugsLib.Utils;
 using RimWorld;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace DefensivePositions {
 	[StaticConstructorOnStartup]
 	public class PawnSavedPositionHandler : IExposable {
 		public const int NumAdvancedPositionButtons = 4;
+		public const float HotkeyMultiPressTimeout = .5f;
 		private const int InvalidMapValue = -1;
 
 		private static readonly Texture2D UITex_Basic = ContentFinder<Texture2D>.Get("UIPositionLarge");
@@ -24,6 +26,8 @@ namespace DefensivePositions {
 		}
 
 		public Pawn Owner { get; set; }
+		private float lastMultiPressTime;
+		private int lastMultiPressSlot;
 
 		// --- saved fields ---
 		private List<IntVec3> savedPositions; // the positions saved in the 4 slots for this pawn
@@ -42,12 +46,15 @@ namespace DefensivePositions {
 			}
 		}
 
-		public bool TrySendPawnToPositionByHotkey() {
+		public HotkeyActivationResult TrySendPawnToPositionByHotkey() {
 			var index = GetHotkeyControlIndex();
+			var success = false;
 			var position = savedPositions[index];
-			if(!PawnHasValidSavedPositionOnMap(Owner, index)) return false;
-			DraftPawnToPosition(Owner, position);
-			return true;
+			if (PawnHasValidSavedPositionOnMap(Owner, index)) {
+				DraftPawnToPosition(Owner, position);
+				success = true;
+			}
+			return new HotkeyActivationResult(success, index);
 		}
 
 		public Command GetGizmo(Pawn forPawn) {
@@ -89,7 +96,22 @@ namespace DefensivePositions {
 		}
 
 		private int GetHotkeyControlIndex() {
-			return DefensivePositionsManager.Instance.FirstSlotHotkeySetting.Value ? 0 : DefensivePositionsManager.Instance.LastAdvancedControlUsed;
+			switch (DefensivePositionsManager.Instance.SlotHotkeySetting.Value) {
+				case DefensivePositionsManager.HotkeyMode.FirstSlotOnly:
+					return 0;
+				case DefensivePositionsManager.HotkeyMode.LastUsedSlot:
+					return DefensivePositionsManager.Instance.LastAdvancedControlUsed;
+				case DefensivePositionsManager.HotkeyMode.MultiPress:
+					if (DefensivePositionsManager.Instance.AdvancedModeEnabled && Time.unscaledTime - lastMultiPressTime < HotkeyMultiPressTimeout) {
+						lastMultiPressSlot = (lastMultiPressSlot + 1) % NumAdvancedPositionButtons;
+					} else {
+						lastMultiPressSlot = 0;
+					}
+					lastMultiPressTime = Time.unscaledTime;
+					return lastMultiPressSlot;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 
 		private void HandleControlInteraction(int controlIndex) {
@@ -182,6 +204,16 @@ namespace DefensivePositions {
 			for (int i = 0; i < NumAdvancedPositionButtons; i++) {
 				savedPositions.Add(IntVec3.Invalid);
 				originalMaps.Add(InvalidMapValue);
+			}
+		}
+
+		public struct HotkeyActivationResult {
+			public readonly bool success;
+			public readonly int activatedSlot;
+
+			public HotkeyActivationResult(bool success, int activatedSlot) {
+				this.success = success;
+				this.activatedSlot = activatedSlot;
 			}
 		}
 	}

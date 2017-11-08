@@ -13,6 +13,12 @@ namespace DefensivePositions {
 	public class DefensivePositionsManager : ModBase {
 		public static DefensivePositionsManager Instance { get; private set; }
 
+		public enum HotkeyMode {
+			FirstSlotOnly,
+			LastUsedSlot,
+			MultiPress
+		}
+
 		public override string ModIdentifier {
 			get { return "DefensivePositions"; }
 		}
@@ -36,7 +42,7 @@ namespace DefensivePositions {
 
 		public ScheduledReportManager Reporter { get; private set; }
 
-		public SettingHandle<bool> FirstSlotHotkeySetting { get; private set; }
+		public SettingHandle<HotkeyMode> SlotHotkeySetting { get; private set; }
 
 		private readonly PawnSquadHandler squadHandler;
 		private readonly MiscHotkeyHandler miscHotkeys;
@@ -52,7 +58,8 @@ namespace DefensivePositions {
 		}
 
 		public override void DefsLoaded() {
-			FirstSlotHotkeySetting = Settings.GetHandle("firstSlotHotkey", "setting_hotkeyMode_label".Translate(), "setting_hotkeyMode_desc".Translate(), true);
+			SlotHotkeySetting = Settings.GetHandle("slotHotkeyMode", "setting_slotHotkeyMode_label".Translate(), "setting_slotHotkeyMode_desc".Translate(), HotkeyMode.MultiPress, null, "setting_slotHotkeyMode_");
+			Settings.TryRemoveUnclaimedValue("firstSlotHotkey");
 		}
 
 		public override void WorldLoaded() {

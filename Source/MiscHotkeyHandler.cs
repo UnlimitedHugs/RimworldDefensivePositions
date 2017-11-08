@@ -32,17 +32,20 @@ namespace DefensivePositions {
 
 		private void SendAllColonistsToDefensivePosition() {
 			var hits = 0;
+			var activatedSlot = 0;
 			foreach (var pawn in GetColonistsOnAllMaps()) {
 				if (!pawn.IsColonistPlayerControlled || pawn.Downed) continue;
 				var handler = DefensivePositionsManager.Instance.GetHandlerForPawn(pawn);
-				if (handler.TrySendPawnToPositionByHotkey()) {
+				var result = handler.TrySendPawnToPositionByHotkey();
+				if (result.success) {
 					hits++;
 				}
+				activatedSlot = result.activatedSlot + 1;
 			}
 			if (hits > 0) {
-				Messages.Message("DefPos_msg_sentAll".Translate(hits), MessageTypeDefOf.SilentInput);
+				Messages.Message("DefPos_msg_sentAllSlot".Translate(hits, activatedSlot), MessageTypeDefOf.SilentInput);
 			} else {
-				Messages.Message("DefPos_msg_nopositionAll".Translate(), MessageTypeDefOf.RejectInput);
+				Messages.Message("DefPos_msg_nopositionAllSlot".Translate(activatedSlot), MessageTypeDefOf.RejectInput);
 			}
 		}
 

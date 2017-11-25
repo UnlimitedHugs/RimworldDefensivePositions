@@ -29,6 +29,10 @@
   <DefPos_msg_nopositionAll>居民都均未设定防御位置。</DefPos_msg_nopositionAll>
   <DefPos_msg_undraftedAll>已解散{0}位殖民者。</DefPos_msg_undraftedAll>
   <DefPos_msg_nooneDrafted>所有居民均已经解散。</DefPos_msg_nooneDrafted>
+	
+  <setting_hotkeyMode_label>快捷键只激活第一个位置</setting_hotkeyMode_label>
+  <setting_hotkeyMode_desc>开启后，高级模式中快捷键只会激活的第一个保存的位置。关闭后，快捷键会激活最近使用的位置。</setting_hotkeyMode_desc>
+
 
 	<setting_slotHotkeyMode_label>热键模式</setting_slotHotkeyMode_label>
 	<setting_slotHotkeyMode_desc>设置使用在高级模式下键盘快捷键时候的行为：

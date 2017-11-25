@@ -25,22 +25,18 @@
   <DefPos_msg_squadCleared>没有选择任何殖民者。编队{0}已清空。</DefPos_msg_squadCleared>
   <DefPos_msg_squadAssigned>已分配{0}位殖民者到编队{1}。</DefPos_msg_squadAssigned>
   <DefPos_msg_selectedAll>已选择所有殖民者。</DefPos_msg_selectedAll>
-  <DefPos_msg_sentAll>已派遣{0}位殖民者前往防御位置。</DefPos_msg_sentAll>
-  <DefPos_msg_nopositionAll>居民都均未设定防御位置。</DefPos_msg_nopositionAll>
+  <DefPos_msg_sentAllSlot>已派遣{0}位殖民者前往防御位置{1}。</DefPos_msg_sentAllSlot>
+  <DefPos_msg_nopositionAllSlot>插槽{0}的防御位置未设定殖民者。</DefPos_msg_nopositionAllSlot>
   <DefPos_msg_undraftedAll>已解散{0}位殖民者。</DefPos_msg_undraftedAll>
   <DefPos_msg_nooneDrafted>所有居民均已经解散。</DefPos_msg_nooneDrafted>
-	
-  <setting_hotkeyMode_label>快捷键只激活第一个位置</setting_hotkeyMode_label>
-  <setting_hotkeyMode_desc>开启后，高级模式中快捷键只会激活的第一个保存的位置。关闭后，快捷键会激活最近使用的位置。</setting_hotkeyMode_desc>
 
-
-	<setting_slotHotkeyMode_label>热键模式</setting_slotHotkeyMode_label>
-	<setting_slotHotkeyMode_desc>设置使用在高级模式下键盘快捷键时候的行为：
-&lt;b&gt;第一位置：&lt;/b&gt; 总是命令前往一号位置。
-&lt;b&gt;最后使用：&lt;/b&gt; 命令前往最近使用过的位置。
-&lt;b&gt;连续按下：&lt;/b&gt; 连续按下位置快捷键一至四次来命令前往对应的位置。</setting_slotHotkeyMode_desc>
-	<setting_slotHotkeyMode_FirstSlotOnly>第一位置</setting_slotHotkeyMode_FirstSlotOnly>
-	<setting_slotHotkeyMode_LastUsedSlot>最后使用</setting_slotHotkeyMode_LastUsedSlot>
-	<setting_slotHotkeyMode_MultiPress>连续按下</setting_slotHotkeyMode_MultiPress>
+  <setting_slotHotkeyMode_label>快捷键模式</setting_slotHotkeyMode_label>
+  <setting_slotHotkeyMode_desc>设置快捷键高级模式的行为：
+&lt;b&gt;仅第一个插槽：&lt;/b&gt;总是激活第一个插槽。
+&lt;b&gt;用于最后一个插槽：&lt;/b&gt;激活最后一个插槽。
+&lt;b&gt;多按键：&lt;/b&gt;按下1-4键，以激活对应的插槽。</setting_slotHotkeyMode_desc>
+  <setting_slotHotkeyMode_FirstSlotOnly>仅第一个插槽</setting_slotHotkeyMode_FirstSlotOnly>
+  <setting_slotHotkeyMode_LastUsedSlot>用于最后一个插槽</setting_slotHotkeyMode_LastUsedSlot>
+  <setting_slotHotkeyMode_MultiPress>多按键</setting_slotHotkeyMode_MultiPress>
 
 </LanguageData>

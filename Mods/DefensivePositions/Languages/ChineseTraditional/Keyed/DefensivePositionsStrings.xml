@@ -25,12 +25,18 @@
   <DefPos_msg_squadCleared>未選擇任何殖民者。編隊{0}已清空。</DefPos_msg_squadCleared>
   <DefPos_msg_squadAssigned>已分配{0}位殖民者到編隊{1}。</DefPos_msg_squadAssigned>
   <DefPos_msg_selectedAll>已選擇所有殖民者。</DefPos_msg_selectedAll>
-  <DefPos_msg_sentAll>已派遣{0}位殖民者前往防禦位置。</DefPos_msg_sentAll>
-  <DefPos_msg_nopositionAll>殖民者均未設定防禦位置。</DefPos_msg_nopositionAll>
+  <DefPos_msg_sentAllSlot>已派遣{0}位殖民者前往防禦位置{1}。</DefPos_msg_sentAllSlot>
+  <DefPos_msg_nopositionAllSlot>插槽{0}的防禦位置未设定殖民者。</DefPos_msg_nopositionAllSlot>
   <DefPos_msg_undraftedAll>已解散{0}位殖民者。</DefPos_msg_undraftedAll>
   <DefPos_msg_nooneDrafted>所有殖民者均已解散。</DefPos_msg_nooneDrafted>
 
-  <setting_hotkeyMode_label>快捷鍵只激活第一個位置。</setting_hotkeyMode_label>
-  <setting_hotkeyMode_desc>開啟後，高級模式中快捷鍵只會激活第一個保存的位置。關閉後，快捷鍵會激活最近使用的位置。</setting_hotkeyMode_desc>
+  <setting_slotHotkeyMode_label>快捷鍵模式</setting_slotHotkeyMode_label>
+  <setting_slotHotkeyMode_desc>設置快捷鍵高級模式的行為：
+&lt;b&gt;僅第一個插槽：&lt;/b&gt;總是接貨第一個插槽。
+&lt;b&gt;用於最後一個插槽：&lt;/b&gt;激活最後一個插槽。
+&lt;b&gt;多按鍵：&lt;/b&gt;按下1-4鍵，以激活對應的插槽。</setting_slotHotkeyMode_desc>
+  <setting_slotHotkeyMode_FirstSlotOnly>僅第一個插槽</setting_slotHotkeyMode_FirstSlotOnly>
+  <setting_slotHotkeyMode_LastUsedSlot>用於最後一個插槽</setting_slotHotkeyMode_LastUsedSlot>
+  <setting_slotHotkeyMode_MultiPress>多按鍵</setting_slotHotkeyMode_MultiPress>
 
 </LanguageData>

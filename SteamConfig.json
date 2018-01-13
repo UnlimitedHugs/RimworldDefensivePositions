@@ -1,0 +1,5 @@
+{
+	"title": "Defensive Positions",
+	"description": "Allows your colonists to remember their position during base defense. You can send off your colonists to their positions with a single click. Also provides keys to quickly create and select groups of colonists for easier control in battle.\n\nContains Basic and Advanced mode- Advanced allows to save up to 4 defensive positions per colonist. Great for multiple base entrances and fall-back lines of defense.\n\nCan be safely added to existing games.\n\n[b]Notice:[/b] The HugsLib library mod must also be installed. Make sure both are enabled in the Mods menu and HugsLib is loaded first. \n\nThe in-game description contains a brief guide. To get more info, discuss features or provide feedback, please visit the official forum thread: \nhttps://ludeon.com/forums/index.php?topic=25535\n\nHope you enjoy.\n\nThe A17 version is still available, and can be found here: [url=http://steamcommunity.com/sharedfiles/filedetails/?id=1204585677]Defensive Positions (A17)[/url]",
+	"visibility": 0
+}

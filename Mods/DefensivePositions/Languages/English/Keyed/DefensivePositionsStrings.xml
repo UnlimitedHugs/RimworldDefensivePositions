@@ -21,9 +21,9 @@ Alt + click to switch to basic mode.</DefPos_advanced_desc>
 	<DefPos_msg_clearFailed>None of the selected pawns had a defensive position to clear.</DefPos_msg_clearFailed>
 	
 	<!-- keyboard shortcut messages -->
-	<DefPos_msg_squadEmpty>No colonists assigned to squad {0}. Hold Control and press again to assign.</DefPos_msg_squadEmpty>
-	<DefPos_msg_squadCleared>No colonists selected. Squad {0} cleared.</DefPos_msg_squadCleared>
-	<DefPos_msg_squadAssigned>Assigned {0} colonists to squad {1}.</DefPos_msg_squadAssigned>
+	<DefPos_msg_squadEmpty>No members assigned to squad {0}. Hold Control and press again to assign.</DefPos_msg_squadEmpty>
+	<DefPos_msg_squadCleared>No squad members selected. Squad {0} cleared.</DefPos_msg_squadCleared>
+	<DefPos_msg_squadAssigned>Assigned {0} members to squad {1}.</DefPos_msg_squadAssigned>
 	<DefPos_msg_selectedAll>All colonists selected.</DefPos_msg_selectedAll>
 	<DefPos_msg_sentAllSlot>Sent {0} colonists to defensive position {1}.</DefPos_msg_sentAllSlot>
 	<DefPos_msg_nopositionAllSlot>None of the colonists have a defensive position set in slot {0}.</DefPos_msg_nopositionAllSlot>

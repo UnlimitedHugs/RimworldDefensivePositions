@@ -3,10 +3,12 @@ using Verse;
 
 namespace DefensivePositions {
 	/**
-	 * Represents a saved squad of pawns
+	 * Represents a saved squad of pawns or buildings
 	 */
 	public class PawnSquad : IExposable {
+		// the key this squad is assigned to
 		public int squadId;
+		// thingIds of assigned pawns of buildings
 		public List<int> pawnIds;
 
 		public PawnSquad() {

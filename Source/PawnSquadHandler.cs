@@ -53,9 +53,9 @@ namespace DefensivePositions {
 				// Control is held, assign pawns to squad
 				var idList = new List<int>();
 				foreach (var obj in Find.Selector.SelectedObjects) {
-					var pawn = obj as Pawn;
-					if(pawn == null || pawn.Faction == null || !pawn.Faction.IsPlayer) continue;
-					idList.Add(pawn.thingIDNumber);
+					var thing = obj as Thing;
+					if(thing == null || thing.Faction == null || !thing.Faction.IsPlayer || !(thing is Pawn || thing is Building)) continue;
+					idList.Add(thing.thingIDNumber);
 				}
 				if (idList.Count > 0) {
 					// reassign squad with selected pawns
@@ -74,24 +74,24 @@ namespace DefensivePositions {
 				// Select pawns that belong to squad
 				var selectionBeforeClear = Find.Selector.SelectedObjects.ToList();
 				if(!HugsLibUtility.ShiftIsHeld) Find.Selector.ClearSelection();
-				List<Pawn> matchingPawnsOnMaps = null;
+				List<Thing> matchingThingsOnMaps = null;
 				Caravan matchingCaravan = null;
 				if (squad != null && squad.pawnIds.Count > 0) {
-					matchingPawnsOnMaps = GetLivePawnsOnAllMapsById(squad.pawnIds);
-					if (matchingPawnsOnMaps.Count == 0) {
+					matchingThingsOnMaps = GetLivePawnsAndBuildingsOnAllMapsById(squad.pawnIds);
+					if (matchingThingsOnMaps.Count == 0) {
 						matchingCaravan = TryGetFirstCaravanWithPawnsById(squad.pawnIds);
 					}
 				}
-				if (matchingPawnsOnMaps!=null && matchingPawnsOnMaps.Count>0) {
-					var pawns = SelectOnlyPawnsOnSameMap(matchingPawnsOnMaps);
+				if (matchingThingsOnMaps!=null && matchingThingsOnMaps.Count>0) {
+					var things = SelectOnlyThingsOnSameMap(matchingThingsOnMaps);
 					// focus view on squad if repeat squad key press OR if not currently viewing the map
-					if (Find.VisibleMap != pawns[0].Map || InWorldView() || PawnsAlreadyMatchSelection(pawns, selectionBeforeClear)) {	
+					if (Find.VisibleMap != things[0].Map || InWorldView() || ThingsAlreadyMatchSelection(things, selectionBeforeClear)) {	
 						TryEscapeWorldView();
-						TryFocusPawnGroupCenter(pawns);
+						TryFocusThingGroupCenter(things);
 					}
 					// select pawns on map, switch map if necessary
-					foreach (var pawn in pawns) {
-						Find.Selector.Select(pawn);
+					foreach (var thing in things) {
+						Find.Selector.Select(thing);
 					}
 				} else if (matchingCaravan != null) {
 					// select caravan with pawns
@@ -102,15 +102,17 @@ namespace DefensivePositions {
 			}
 		}
 
-		private List<Pawn> GetLivePawnsOnAllMapsById(List<int> pawnIds) {
-			var results = new List<Pawn>();
+		private List<Thing> GetLivePawnsAndBuildingsOnAllMapsById(List<int> thingIds) {
+			var idSet = new HashSet<int>(thingIds);
+			var results = new List<Thing>();
 			for (int i = 0; i < Current.Game.Maps.Count; i++) {
-				var mapPawns = Current.Game.Maps[i].mapPawns.AllPawnsSpawned;
-				for (int j = 0; j < mapPawns.Count; j++) {
-					var pawn = mapPawns[j];
-					if (pawn.Dead) continue;
-					if (pawnIds.Contains(pawn.thingIDNumber)) {
-						results.Add(pawn);
+				var map = Current.Game.Maps[i];
+				var candidates = map.mapPawns.AllPawnsSpawned.Cast<Thing>().Concat(map.listerBuildings.allBuildingsColonist.Cast<Thing>());
+				foreach (var thing in candidates) {
+					var pawn = thing as Pawn;
+					if (pawn != null && pawn.Dead) continue;
+					if (idSet.Contains(thing.thingIDNumber)) {
+						results.Add(thing);
 					} 
 				}
 			}
@@ -118,13 +120,13 @@ namespace DefensivePositions {
 		}
 
 		// filter the list by dropping all pawns that are on a different map than the first one
-		private List<Pawn> SelectOnlyPawnsOnSameMap(List<Pawn> pawns) {
+		private List<Thing> SelectOnlyThingsOnSameMap(List<Thing> things) {
 			Map firstMap = null;
-			var results = new List<Pawn>();
-			foreach (var pawn in pawns) {
-				if (firstMap == null) firstMap = pawn.Map;
-				if(pawn.Map != firstMap) continue;
-				results.Add(pawn);
+			var results = new List<Thing>();
+			foreach (var thing in things) {
+				if (firstMap == null) firstMap = thing.Map;
+				if(thing.Map != firstMap) continue;
+				results.Add(thing);
 			}
 			return results;
 		}
@@ -141,14 +143,14 @@ namespace DefensivePositions {
 		}
 
 		// switches to the map the pawns are on and moves the camera to the center point of the group
-		private void TryFocusPawnGroupCenter(List<Pawn> pawns) {
-			if (pawns.Count == 0) return;
+		private void TryFocusThingGroupCenter(List<Thing> things) {
+			if (things.Count == 0) return;
 			var sum = IntVec3.Zero;
-			foreach (var pawn in pawns) {
-				sum += pawn.Position;
+			foreach (var thing in things) {
+				sum += thing.Position;
 			}
-			var average = new IntVec3(sum.x/pawns.Count, 0, sum.z/pawns.Count);
-			CameraJumper.TryJump(new GlobalTargetInfo(average, pawns[0].Map));
+			var average = new IntVec3(sum.x/things.Count, 0, sum.z/things.Count);
+			CameraJumper.TryJump(new GlobalTargetInfo(average, things[0].Map));
 		}
 
 		private bool InWorldView() {
@@ -160,11 +162,11 @@ namespace DefensivePositions {
 			Find.MainTabsRoot.EscapeCurrentTab();
 		}
 
-		private bool PawnsAlreadyMatchSelection(List<Pawn> pawns, List<object> selection) {
-			foreach (var pawn in pawns) {
-				if (!selection.Contains(pawn)) return false;
+		private bool ThingsAlreadyMatchSelection(List<Thing> things, List<object> selection) {
+			foreach (var thing in things) {
+				if (!selection.Contains(thing)) return false;
 			}
-			return selection.Count == pawns.Count;
+			return selection.Count == things.Count;
 		}
 	}
 }

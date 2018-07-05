@@ -22,7 +22,7 @@ namespace DefensivePositions {
 
 		public void OnGUI() {
 			if(Current.ProgramState != ProgramState.Playing || Event.current.type != EventType.KeyDown) return;
-			PollSquadHotkeys(Event.current.keyCode);
+			PollSquadHotkeys(Event.current);
 		}
 
 		private void PrepareSquadHotkeys() {
@@ -33,13 +33,15 @@ namespace DefensivePositions {
 			}
 		}
 
-		private void PollSquadHotkeys(KeyCode pressedKey) {
+		private void PollSquadHotkeys(Event evt) {
+			var pressedKey = evt.keyCode;
 			if(pressedKey == KeyCode.None) return;
 			for (int i = 0; i < squadKeys.Count; i++) {
 				var key = squadKeys[i].Key;
 				KeyBindingData binding;
 				if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(key, out binding) && (pressedKey == binding.keyBindingA || pressedKey == binding.keyBindingB)) {
 					ProcessSquadCommand(squadKeys[i].Value);
+					evt.Use();
 					return;
 				}
 			}
@@ -85,7 +87,7 @@ namespace DefensivePositions {
 				if (matchingThingsOnMaps!=null && matchingThingsOnMaps.Count>0) {
 					var things = SelectOnlyThingsOnSameMap(matchingThingsOnMaps);
 					// focus view on squad if repeat squad key press OR if not currently viewing the map
-					if (Find.VisibleMap != things[0].Map || InWorldView() || ThingsAlreadyMatchSelection(things, selectionBeforeClear)) {	
+					if (Find.CurrentMap != things[0].Map || InWorldView() || ThingsAlreadyMatchSelection(things, selectionBeforeClear)) {	
 						TryEscapeWorldView();
 						TryFocusThingGroupCenter(things);
 					}

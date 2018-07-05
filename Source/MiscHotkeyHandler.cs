@@ -28,7 +28,9 @@ namespace DefensivePositions {
 		private void SelectAllColonists() {
 			Find.Selector.ClearSelection();
 			foreach (var pawn in GetColonistsOnVisibleMap()) {
-				Find.Selector.Select(pawn);
+				// bypass the selection limit
+				Find.Selector.SelectedObjects.Add(pawn);
+				SelectionDrawer.Notify_Selected(pawn);
 			}
 			Messages.Message("DefPos_msg_selectedAll".Translate(), MessageTypeDefOf.SilentInput);
 		}

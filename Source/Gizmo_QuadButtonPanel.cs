@@ -16,15 +16,11 @@ namespace DefensivePositions {
 		private static readonly Color iconBaseColor = new Color(.5f, .5f, .5f, 1f);
 		private static readonly Color iconMouseOverAdd = new Color(.1f, .1f, .1f, 0f);
 
-		public override float Width {
-			get { return GizmoSize; }
-		}
-
 		public Texture2D[] iconTextures;
 		public Action hotkeyAction;
 		public Action<int> iconClickAction;
 
-		public override GizmoResult GizmoOnGUI(Vector2 topLeft) {
+		public override GizmoResult GizmoOnGUI(Vector2 topLeft, float maxWidth) {
 			var gizmoRect = new Rect(topLeft.x, topLeft.y, GizmoSize, GizmoSize);
 			var contentRect = gizmoRect.ContractedBy(ContentPadding);
 			Widgets.DrawWindowBackground(gizmoRect);
@@ -33,23 +29,23 @@ namespace DefensivePositions {
 			if (iconTextures != null) {
 				for (int i = 0; i < iconTextures.Length; i++) {
 					var iconTex = iconTextures[i];
-					var iconOffset = new Vector2();
+					var offset = new Vector2();
 					switch (i) {
 						case 1:
-							iconOffset = new Vector2(IconSize, 0);
+							offset = new Vector2(IconSize, 0);
 							break;
 						case 2:
-							iconOffset = new Vector2(0, IconSize);
+							offset = new Vector2(0, IconSize);
 							break;
 						case 3:
-							iconOffset = new Vector2(IconSize, IconSize);
+							offset = new Vector2(IconSize, IconSize);
 							break;
 					}
-					var iconRect = new Rect(contentRect.x + iconOffset.x, contentRect.y + iconOffset.y, contentRect.width/2f, contentRect.height/2f);
+					var iconRect = new Rect(contentRect.x + offset.x, contentRect.y + offset.y, contentRect.width/2f, contentRect.height/2f);
 					var iconColor = iconBaseColor;
 
 					TooltipHandler.TipRegion(iconRect, string.Format(defaultDesc, i + 1));
-					MouseoverSounds.DoRegion(iconRect, SoundDefOf.MouseoverCommand);
+					MouseoverSounds.DoRegion(iconRect, SoundDefOf.Mouseover_Command);
 					if (Mouse.IsOver(iconRect)) {
 						iconColor += iconMouseOverAdd;
 					}
@@ -70,6 +66,10 @@ namespace DefensivePositions {
 			}
 			DrawGizmoLabel(defaultLabel, gizmoRect);
 			return interacted ? new GizmoResult(GizmoState.Interacted, Event.current) : new GizmoResult(GizmoState.Clear);
+		}
+
+		public override float GetWidth(float maxWidth) {
+			return GizmoSize;
 		}
 
 		public override void ProcessInput(Event ev) {

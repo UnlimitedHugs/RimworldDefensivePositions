@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using HugsLib;
 using HugsLib.Settings;
 using HugsLib.Utils;
+using RimWorld;
+using UnityEngine;
 using Verse;
 using Verse.Sound;
 
@@ -43,6 +45,7 @@ namespace DefensivePositions {
 		public ScheduledReportManager Reporter { get; private set; }
 
 		public SettingHandle<HotkeyMode> SlotHotkeySetting { get; private set; }
+		public SettingHandle<bool> VanillaKeyOverridenSetting { get; private set; }
 
 		private readonly PawnSquadHandler squadHandler;
 		private readonly MiscHotkeyHandler miscHotkeys;
@@ -59,7 +62,9 @@ namespace DefensivePositions {
 
 		public override void DefsLoaded() {
 			SlotHotkeySetting = Settings.GetHandle("slotHotkeyMode", "setting_slotHotkeyMode_label".Translate(), "setting_slotHotkeyMode_desc".Translate(), HotkeyMode.MultiPress, null, "setting_slotHotkeyMode_");
-			Settings.TryRemoveUnclaimedValue("firstSlotHotkey");
+			VanillaKeyOverridenSetting = Settings.GetHandle("vanillaKeyOverriden", null, null, false);
+			VanillaKeyOverridenSetting.NeverVisible = true;
+			OverrideVanillaKeyIfNeeded();
 		}
 
 		public override void WorldLoaded() {
@@ -104,6 +109,23 @@ namespace DefensivePositions {
 
 		public void ScheduleSoundOnCamera(SoundDef sound) {
 			scheduledSound = sound;
+		}
+
+		// free the "T" key, claimed by vanilla in 1.0. This is only done once and in the interest of not breaking player habits
+		private void OverrideVanillaKeyIfNeeded() {
+			if (!VanillaKeyOverridenSetting) {
+				var keyDef = KeyBindingDefOf.ToggleBeautyDisplay;
+				if (keyDef.MainKey == KeyCode.T) {
+					KeyBindingData kbd;
+					if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(keyDef, out kbd)) {
+						kbd.keyBindingA = KeyCode.None;
+						KeyPrefs.Save();
+						VanillaKeyOverridenSetting.Value = true;
+						HugsLibController.SettingsManager.SaveChanges();
+						Logger.Message("Cleared 'toggle beauty display' key binding");
+					}
+				}
+			}
 		}
 	}
 }

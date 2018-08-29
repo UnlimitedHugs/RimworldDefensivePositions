@@ -67,7 +67,7 @@ namespace DefensivePositions {
 					hotKey = HotkeyDefOf.DefensivePositionGizmo,
 					defaultLabel = "DefPos_advanced_label".Translate(),
 					defaultDesc = "DefPos_advanced_desc".Translate(),
-					activateSound = SoundDefOf.TickTiny
+					activateSound = SoundDefOf.Tick_Tiny
 				};
 			} else {
 				return new Command_Action {
@@ -76,7 +76,7 @@ namespace DefensivePositions {
 					hotKey = HotkeyDefOf.DefensivePositionGizmo,
 					action = OnBasicGizmoAction,
 					icon = UITex_Basic,
-					activateSound = SoundDefOf.TickTiny
+					activateSound = SoundDefOf.Tick_Tiny
 				};
 			}
 		}

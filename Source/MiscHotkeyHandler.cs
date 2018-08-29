@@ -13,19 +13,24 @@ namespace DefensivePositions {
 			if (Current.ProgramState != ProgramState.Playing || Event.current.type != EventType.KeyDown || Event.current.keyCode == KeyCode.None) return;
 			if (HotkeyDefOf.DPSelectAllColonists.JustPressed) {
 				SelectAllColonists();
+				Event.current.Use();
 			}
 			if (HotkeyDefOf.DPSendAllColonists.JustPressed) {
 				SendAllColonistsToDefensivePosition();
+				Event.current.Use();
 			}
 			if (HotkeyDefOf.DPUndraftAll.JustPressed) {
 				UndraftAllColonists();
+				Event.current.Use();
 			}
 		}
 
 		private void SelectAllColonists() {
 			Find.Selector.ClearSelection();
 			foreach (var pawn in GetColonistsOnVisibleMap()) {
-				Find.Selector.Select(pawn);
+				// bypass the selection limit
+				Find.Selector.SelectedObjects.Add(pawn);
+				SelectionDrawer.Notify_Selected(pawn);
 			}
 			Messages.Message("DefPos_msg_selectedAll".Translate(), MessageTypeDefOf.SilentInput);
 		}
@@ -66,7 +71,7 @@ namespace DefensivePositions {
 		}
 
 		private IEnumerable<Pawn> GetColonistsOnVisibleMap() {
-			var map = Find.VisibleMap;
+			var map = Find.CurrentMap;
 			var result = new List<Pawn>();
 			if (map == null) return result;
 			var playerFaction = Faction.OfPlayer;

@@ -4,7 +4,7 @@ using Verse;
 namespace DefensivePositions {
 	/**
 	 * Interactions with the control can have different outcomes when multiple pawns are selected. 
-	 * This class collects the data and reports on in on the next frame.
+	 * This class collects the data and reports on it on the next frame.
 	 */
 	public class ScheduledReportManager {
 		public enum ReportType {
@@ -69,7 +69,7 @@ namespace DefensivePositions {
 						report.numPawnsHadTargetPosition++;
 					} else {
 						report.numPawnsHadNoTargetPosition++;
-						var pawnName = pawn.NameStringShort;
+						var pawnName = pawn.Name.ToStringShort;
 						if (report.noTargetPositionNames == null) {
 							report.noTargetPositionNames += pawnName;
 						} else {

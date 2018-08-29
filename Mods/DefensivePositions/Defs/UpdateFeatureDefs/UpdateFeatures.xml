@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 	<HugsLib.UpdateFeatureDef Abstract="true" Name="UpdateFeatureBase">
-		<defName>UpdateFeature</defName>
+		<defName>DefensivePositionsUpdateFeature</defName>
 		<modNameReadable>Defensive Positions</modNameReadable>
 		<modIdentifier>DefensivePositions</modIdentifier>
 		<linkUrl>https://ludeon.com/forums/index.php?topic=25535</linkUrl>

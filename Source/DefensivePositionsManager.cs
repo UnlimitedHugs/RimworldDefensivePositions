@@ -21,6 +21,11 @@ namespace DefensivePositions {
 			MultiPress
 		}
 
+		public enum ShiftKeyMode {
+			AssignSlot,
+			QueueOrder
+		}
+
 		public override string ModIdentifier {
 			get { return "DefensivePositions"; }
 		}
@@ -42,9 +47,10 @@ namespace DefensivePositions {
 			get { return saveData.pawnSquads; }
 		} 
 
-		public ScheduledReportManager Reporter { get; private set; }
+		public ScheduledReportManager Reporter { get; }
 
 		public SettingHandle<HotkeyMode> SlotHotkeySetting { get; private set; }
+		public SettingHandle<ShiftKeyMode> ShiftKeyModeSetting { get; private set; }
 		public SettingHandle<bool> VanillaKeyOverridenSetting { get; private set; }
 
 		private readonly PawnSquadHandler squadHandler;
@@ -52,6 +58,7 @@ namespace DefensivePositions {
 		private bool modeSwitchScheduled;
 		private SoundDef scheduledSound;
 		private DefensivePositionsData saveData;
+
 
 		private DefensivePositionsManager() {
 			Instance = this;
@@ -64,6 +71,7 @@ namespace DefensivePositions {
 			SlotHotkeySetting = Settings.GetHandle("slotHotkeyMode", "setting_slotHotkeyMode_label".Translate(), "setting_slotHotkeyMode_desc".Translate(), HotkeyMode.MultiPress, null, "setting_slotHotkeyMode_");
 			VanillaKeyOverridenSetting = Settings.GetHandle("vanillaKeyOverriden", null, null, false);
 			VanillaKeyOverridenSetting.NeverVisible = true;
+			ShiftKeyModeSetting = Settings.GetHandle("shiftKeyMode", "setting_shiftKeyMode_label".Translate(), "setting_shiftKeyMode_desc".Translate(), ShiftKeyMode.AssignSlot, null, "setting_shiftKeyMode_");
 			OverrideVanillaKeyIfNeeded();
 		}
 
@@ -93,8 +101,7 @@ namespace DefensivePositions {
 		public PawnSavedPositionHandler GetHandlerForPawn(Pawn pawn) {
 			if(saveData == null) throw new Exception("Cannot get handler- saveData not loaded");
 			var pawnId = pawn.thingIDNumber;
-			PawnSavedPositionHandler handler;
-			if (!saveData.handlers.TryGetValue(pawnId, out handler)) {
+			if (!saveData.handlers.TryGetValue(pawnId, out PawnSavedPositionHandler handler)) {
 				handler = new PawnSavedPositionHandler();
 				saveData.handlers.Add(pawnId, handler);
 			}

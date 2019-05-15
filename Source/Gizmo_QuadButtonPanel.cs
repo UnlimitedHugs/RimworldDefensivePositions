@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -15,17 +17,26 @@ namespace DefensivePositions {
 
 		private static readonly Color iconBaseColor = new Color(.5f, .5f, .5f, 1f);
 		private static readonly Color iconMouseOverAdd = new Color(.1f, .1f, .1f, 0f);
+		
+		// must be static because GizmoOnGUI is called only for the first gizmo, but ProcessInput is called for all grouped gizmos
+		private static int hoveredControlIndex;
 
 		public Texture2D[] iconTextures;
 		public Action hotkeyAction;
 		public Action<int> iconClickAction;
+		public ISlotAwareContextMenuProvider contextMenuProvider;
+
+		public override IEnumerable<FloatMenuOption> RightClickFloatMenuOptions {
+			get { return hoveredControlIndex >= 0 ? contextMenuProvider.AtSlot(hoveredControlIndex) : Enumerable.Empty<FloatMenuOption>(); }
+		}
 
 		public override GizmoResult GizmoOnGUI(Vector2 topLeft, float maxWidth) {
 			var gizmoRect = new Rect(topLeft.x, topLeft.y, GizmoSize, GizmoSize);
 			var contentRect = gizmoRect.ContractedBy(ContentPadding);
 			Widgets.DrawWindowBackground(gizmoRect);
-			var interacted = false;
-			
+			var state = GizmoState.Clear;
+			hoveredControlIndex = -1;
+
 			if (iconTextures != null) {
 				for (int i = 0; i < iconTextures.Length; i++) {
 					var iconTex = iconTextures[i];
@@ -41,17 +52,19 @@ namespace DefensivePositions {
 							offset = new Vector2(IconSize, IconSize);
 							break;
 					}
-					var iconRect = new Rect(contentRect.x + offset.x, contentRect.y + offset.y, contentRect.width/2f, contentRect.height/2f);
+					var iconRect = new Rect(contentRect.x + offset.x, contentRect.y + offset.y, contentRect.width / 2f, contentRect.height / 2f);
 					var iconColor = iconBaseColor;
 
 					TooltipHandler.TipRegion(iconRect, string.Format(defaultDesc, i + 1));
 					MouseoverSounds.DoRegion(iconRect, SoundDefOf.Mouseover_Command);
 					if (Mouse.IsOver(iconRect)) {
+						state = GizmoState.Mouseover;
 						iconColor += iconMouseOverAdd;
+						hoveredControlIndex = i;
 					}
 					if (Widgets.ButtonInvisible(iconRect, true)) {
-						Event.current.button = i;
-						interacted = true;
+						hoveredControlIndex = i;
+						state = Event.current.button == 0 ? GizmoState.Interacted : GizmoState.OpenedFloatMenu;
 					}
 
 					Graphics.DrawTexture(iconRect, iconTex, new Rect(0, 0, 1f, 1f), 0, 0, 0, 0, iconColor);
@@ -59,13 +72,13 @@ namespace DefensivePositions {
 			}
 
 			DrawHotKeyLabel(gizmoRect);
-			if (hotKey!=null && hotKey.KeyDownEvent) {
-				interacted = true;
-				Event.current.button = -1;
+			if (hotKey != null && hotKey.KeyDownEvent) {
+				state = GizmoState.Interacted;
+				hoveredControlIndex = -1;
 				Event.current.Use();
 			}
 			DrawGizmoLabel(defaultLabel, gizmoRect);
-			return interacted ? new GizmoResult(GizmoState.Interacted, Event.current) : new GizmoResult(GizmoState.Clear);
+			return state == GizmoState.Clear ? new GizmoResult(GizmoState.Clear) : new GizmoResult(state, Event.current);
 		}
 
 		public override float GetWidth(float maxWidth) {
@@ -73,15 +86,12 @@ namespace DefensivePositions {
 		}
 
 		public override void ProcessInput(Event ev) {
-			if (activateSound != null) {
-				activateSound.PlayOneShotOnCamera();
-			}
-			if (ev.button < 0) {
-				if (hotkeyAction != null) hotkeyAction();
+			activateSound?.PlayOneShotOnCamera();
+			if (hoveredControlIndex >= 0) {
+				iconClickAction?.Invoke(hoveredControlIndex);
 			} else {
-				if (iconClickAction != null) iconClickAction(ev.button);
+				hotkeyAction?.Invoke();
 			}
-			
 		}
 
 		private void DrawHotKeyLabel(Rect gizmoRect) {
@@ -102,6 +112,5 @@ namespace DefensivePositions {
 			Text.Anchor = TextAnchor.UpperLeft;
 			GUI.color = Color.white;
 		}
-
 	}
 }

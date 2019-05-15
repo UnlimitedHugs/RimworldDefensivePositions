@@ -11,6 +11,10 @@ Shift + click to set the position.
 Control/Option + click to forget position.
 Alt + click to switch to basic mode.</DefPos_advanced_desc>
 
+	<!-- right-click menu -->
+	<DefPos_context_assignPosition>Save defensive position</DefPos_context_assignPosition>
+	<DefPos_context_clearPosition>Clear saved position</DefPos_context_clearPosition>
+
 	<!-- button messages -->
 	<DefPos_msg_noposition>No defensive position set. Click the button while holding Shift to set it.</DefPos_msg_noposition>
 	<DefPos_msg_noposition_partial>Colonists missing defensive position: {0}</DefPos_msg_noposition_partial>
@@ -38,5 +42,9 @@ Alt + click to switch to basic mode.</DefPos_advanced_desc>
 	<setting_slotHotkeyMode_FirstSlotOnly>First slot only</setting_slotHotkeyMode_FirstSlotOnly>
 	<setting_slotHotkeyMode_LastUsedSlot>Last slot used</setting_slotHotkeyMode_LastUsedSlot>
 	<setting_slotHotkeyMode_MultiPress>Multi-press</setting_slotHotkeyMode_MultiPress>
+	<setting_shiftKeyMode_label>Shift key mode</setting_shiftKeyMode_label>
+	<setting_shiftKeyMode_desc>Defines what holding the Shift key does in combination with clicking a squad slot or pressing the hotkey. When the Shift key is set to queue orders, colonist positions can be assigned through the right-click menu of the slot.</setting_shiftKeyMode_desc>
+	<setting_shiftKeyMode_AssignSlot>Assign slot position</setting_shiftKeyMode_AssignSlot>
+	<setting_shiftKeyMode_QueueOrder>Queue move order</setting_shiftKeyMode_QueueOrder>
 	
 </LanguageData>

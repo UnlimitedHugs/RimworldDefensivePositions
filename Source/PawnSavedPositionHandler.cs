@@ -10,24 +10,23 @@ namespace DefensivePositions {
 	/**
 	 * This is where the gizmos are displayed and the positions are stored for saving.
 	 */
-	[StaticConstructorOnStartup]
 	public class PawnSavedPositionHandler : IExposable {
 		public const int NumAdvancedPositionButtons = 4;
 		public const float HotkeyMultiPressTimeout = .5f;
 		private const int InvalidMapValue = -1;
 
-		private static readonly Texture2D UITex_Basic = ContentFinder<Texture2D>.Get("UIPositionLarge");
-		private static readonly Texture2D[] UITex_AdvancedIcons;
-		static PawnSavedPositionHandler() {
-			UITex_AdvancedIcons = new Texture2D[NumAdvancedPositionButtons];
-			for (int i = 0; i < UITex_AdvancedIcons.Length; i++) {
-				UITex_AdvancedIcons[i] = ContentFinder<Texture2D>.Get("UIPositionSmall_"+(i+1));
+		private Pawn _owner;
+		public Pawn Owner {
+			get {
+				if(_owner == null) DefensivePositionsManager.Instance.Logger.Error("Owner pawn has not been resolved yet\n"+Environment.StackTrace);
+				return _owner;
 			}
+			set { _owner = value; }
 		}
 
-		public Pawn Owner { get; set; }
 		private float lastMultiPressTime;
 		private int lastMultiPressSlot;
+		private DefensivePositionContextMenuProvider contextMenuProvider;
 
 		// --- saved fields ---
 		private List<IntVec3> savedPositions; // the positions saved in the 4 slots for this pawn
@@ -50,7 +49,7 @@ namespace DefensivePositions {
 			var index = GetHotkeyControlIndex();
 			var success = false;
 			var position = savedPositions[index];
-			if (PawnHasValidSavedPositionOnMap(Owner, index)) {
+			if (OwnerHasValidSavedPositionInSlot(index)) {
 				DraftPawnToPosition(Owner, position);
 				success = true;
 			}
@@ -59,26 +58,48 @@ namespace DefensivePositions {
 
 		public Command GetGizmo(Pawn forPawn) {
 			Owner = forPawn;
+			if(contextMenuProvider == null) contextMenuProvider = new DefensivePositionContextMenuProvider(this);
 			if (DefensivePositionsManager.Instance.AdvancedModeEnabled) {
 				return new Gizmo_QuadButtonPanel {
-					iconTextures = UITex_AdvancedIcons,
+					iconTextures = Resources.Textures.AdvancedButtonIcons,
 					iconClickAction = OnAdvancedGizmoClick,
 					hotkeyAction = OnAdvancedHotkeyDown,
-					hotKey = HotkeyDefOf.DefensivePositionGizmo,
+					hotKey = Resources.Hotkeys.DefensivePositionGizmo,
 					defaultLabel = "DefPos_advanced_label".Translate(),
 					defaultDesc = "DefPos_advanced_desc".Translate(),
-					activateSound = SoundDefOf.Tick_Tiny
+					activateSound = SoundDefOf.Tick_Tiny,
+					contextMenuProvider = contextMenuProvider
 				};
 			} else {
-				return new Command_Action {
+				return new Command_ActionWithExternalContextMenu {
 					defaultLabel = "DefPos_basic_label".Translate(),
 					defaultDesc = "DefPos_basic_desc".Translate(),
-					hotKey = HotkeyDefOf.DefensivePositionGizmo,
+					hotKey = Resources.Hotkeys.DefensivePositionGizmo,
 					action = OnBasicGizmoAction,
-					icon = UITex_Basic,
-					activateSound = SoundDefOf.Tick_Tiny
+					icon = Resources.Textures.BasicButton,
+					activateSound = SoundDefOf.Tick_Tiny,
+					contextMenuProvider = contextMenuProvider.AtSlot(0)
 				};
 			}
+		}
+
+		internal void SetDefensivePosition(int positionIndex) {
+			IntVec3 targetPos = GetOwnerDestinationOrPosition();
+			savedPositions[positionIndex] = targetPos;
+			originalMaps[positionIndex] = Owner.Map.uniqueID;
+			DefensivePositionsManager.Instance.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SavedPosition, Owner, true, positionIndex);
+		}
+
+		internal void DiscardSavedPosition(int controlIndex) {
+			var hadPosition = savedPositions[controlIndex].IsValid;
+			savedPositions[controlIndex] = IntVec3.Invalid;
+			originalMaps[controlIndex] = InvalidMapValue;
+			DefensivePositionsManager.Instance.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.ClearedPosition, Owner, hadPosition, controlIndex);
+		}
+
+		private IntVec3 GetOwnerDestinationOrPosition() {
+			var curJob = Owner.jobs.curJob;
+			return Owner.Drafted && curJob != null && curJob.def == JobDefOf.Goto ? curJob.targetA.Cell : Owner.Position;
 		}
 
 		private void OnAdvancedHotkeyDown() {
@@ -116,21 +137,19 @@ namespace DefensivePositions {
 
 		private void HandleControlInteraction(int controlIndex) {
 			var manager = DefensivePositionsManager.Instance;
-			if (HugsLibUtility.ShiftIsHeld) {
+			if (HugsLibUtility.ShiftIsHeld && DefensivePositionsManager.Instance.ShiftKeyModeSetting.Value == DefensivePositionsManager.ShiftKeyMode.AssignSlot) {
 				// save new spot
-				SetDefensivePosition(Owner, controlIndex);
-				manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SavedPosition, Owner, true, controlIndex);
+				SetDefensivePosition(controlIndex);
 			} else if (HugsLibUtility.ControlIsHeld) {
 				// unset saved spot
-				var hadPosition = DiscardSavedPosition(controlIndex);
-				manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.ClearedPosition, Owner, hadPosition, controlIndex);
+				DiscardSavedPosition(controlIndex);
 			} else if (HugsLibUtility.AltIsHeld) {
 				// switch mode
 				manager.ScheduleAdvancedModeToggle();
 			} else {
 				// draft and send to saved spot
 				var spot = savedPositions[controlIndex];
-				if (PawnHasValidSavedPositionOnMap(Owner, controlIndex)) {
+				if (OwnerHasValidSavedPositionInSlot(controlIndex)) {
 					DraftPawnToPosition(Owner, spot);
 					manager.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SentToSavedPosition, Owner, true, controlIndex);
 				} else {
@@ -139,63 +158,25 @@ namespace DefensivePositions {
 			}
 		}
 
-		private void SetDefensivePosition(Pawn pawn, int positionIndex) {
-			var targetPos = pawn.Position;
-			var curPawnJob = pawn.jobs.curJob;
-			if (pawn.Drafted && curPawnJob != null && curPawnJob.def == JobDefOf.Goto) {
-				targetPos = curPawnJob.targetA.Cell;
-			}
-			savedPositions[positionIndex] = targetPos;
-			originalMaps[positionIndex] = pawn.Map.uniqueID;
-		}
-
-		// ensures that control index has a saved position and that position was saved on the map the pawn is on
-		private bool PawnHasValidSavedPositionOnMap(Pawn pawn, int controlIndex) {
-			return savedPositions[controlIndex].IsValid && originalMaps[controlIndex] == pawn.Map.uniqueID;
-		}
-
-		private bool DiscardSavedPosition(int controlIndex) {
-			var hadPosition = savedPositions[controlIndex].IsValid;
-			savedPositions[controlIndex] = IntVec3.Invalid;
-			originalMaps[controlIndex] = InvalidMapValue;
-			return hadPosition;
+		
+		internal bool OwnerHasValidSavedPositionInSlot(int controlIndex) {
+			// ensures that control index has a saved position and that position was saved on the map the pawn is on
+			return savedPositions[controlIndex].IsValid && originalMaps[controlIndex] == Owner.Map.uniqueID;
 		}
 
 		private void DraftPawnToPosition(Pawn pawn, IntVec3 position) {
-			if (!pawn.IsColonistPlayerControlled || pawn.Downed || pawn.drafter == null) return;
-			if (!pawn.Drafted) {
-				pawn.drafter.Drafted = true;
+			if (!NextOrderWillBeQueued(pawn)) {
 				DefensivePositionsManager.Instance.ScheduleSoundOnCamera(SoundDefOf.DraftOn);
 			}
-			var turret = TryFindMannableGunAtPosition(pawn, position);
-			if (turret != null) {
-				var newJob = new Job(JobDefOf.ManTurret, turret.parent);
-				pawn.jobs.TryTakeOrderedJob(newJob);
-			} else {
-				var intVec = RCellFinder.BestOrderedGotoDestNear(position, pawn);
-				var job = new Job(JobDefOf.Goto, intVec) {playerForced = true};
-				pawn.jobs.TryTakeOrderedJob(job);
-				MoteMaker.MakeStaticMote(intVec, pawn.Map, ThingDefOf.Mote_FeedbackGoto);
-			}
+			var job = new Job(Resources.Jobs.DPDraftToPosition, position) {playerForced = true};
+			pawn.jobs.TryTakeOrderedJob(job);
 		}
 
-		// check cardinal adjacent cells for mannable things
-		private CompMannable TryFindMannableGunAtPosition(Pawn forPawn, IntVec3 position) {
-			if (!forPawn.RaceProps.ToolUser) return null;
-			var cardinals = GenAdj.CardinalDirections;
-			for (int i = 0; i < cardinals.Length; i++) {
-				var things = forPawn.Map.thingGrid.ThingsListAt(cardinals[i] + position);
-				for (int j = 0; j < things.Count; j++) {
-					var thing = things[j] as ThingWithComps;
-					if (thing == null) continue;
-					var comp = thing.GetComp<CompMannable>();
-					if (comp == null || thing.InteractionCell != position) continue;
-					var props = comp.Props;
-					if (props == null || props.manWorkType == WorkTags.None || forPawn.story == null || forPawn.story.WorkTagIsDisabled(props.manWorkType)) continue;
-					return comp;
-				}
-			}
-			return null;
+		private bool NextOrderWillBeQueued(Pawn pawn) {
+			bool currentInterruptible = pawn.jobs.IsCurrentJobPlayerInterruptible(),
+				isIdle = pawn.mindState.IsIdle || pawn.CurJob == null || pawn.CurJob.def.isIdle,
+				queueKeyDown = KeyBindingDefOf.QueueOrder.IsDownEvent;
+			return queueKeyDown && !isIdle && !currentInterruptible;
 		}
 
 		private void InitializePositionList() {

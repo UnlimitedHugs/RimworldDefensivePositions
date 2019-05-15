@@ -11,15 +11,15 @@ namespace DefensivePositions {
 	public class MiscHotkeyHandler {
 		public void OnGUI() {
 			if (Current.ProgramState != ProgramState.Playing || Event.current.type != EventType.KeyDown || Event.current.keyCode == KeyCode.None) return;
-			if (HotkeyDefOf.DPSelectAllColonists.JustPressed) {
+			if (Resources.Hotkeys.DPSelectAllColonists.JustPressed) {
 				SelectAllColonists();
 				Event.current.Use();
 			}
-			if (HotkeyDefOf.DPSendAllColonists.JustPressed) {
+			if (Resources.Hotkeys.DPSendAllColonists.JustPressed) {
 				SendAllColonistsToDefensivePosition();
 				Event.current.Use();
 			}
-			if (HotkeyDefOf.DPUndraftAll.JustPressed) {
+			if (Resources.Hotkeys.DPUndraftAll.JustPressed) {
 				UndraftAllColonists();
 				Event.current.Use();
 			}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using HugsLib.Utils;
 using RimWorld;
 using UnityEngine;
+using UnofficialMultiplayerAPI;
 using Verse;
 using Verse.AI;
 
@@ -83,13 +84,15 @@ namespace DefensivePositions {
 			}
 		}
 
+		[SyncMethod]
 		internal void SetDefensivePosition(int positionIndex) {
-			IntVec3 targetPos = GetOwnerDestinationOrPosition();
+			var targetPos = GetOwnerDestinationOrPosition();
 			savedPositions[positionIndex] = targetPos;
 			originalMaps[positionIndex] = Owner.Map.uniqueID;
 			DefensivePositionsManager.Instance.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SavedPosition, Owner, true, positionIndex);
 		}
 
+		[SyncMethod]
 		internal void DiscardSavedPosition(int controlIndex) {
 			var hadPosition = savedPositions[controlIndex].IsValid;
 			savedPositions[controlIndex] = IntVec3.Invalid;

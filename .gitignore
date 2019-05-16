@@ -18,3 +18,4 @@ Version.cpp
 *.DotSettings
 build.js
 *.tmp
+arbiter_log.txt

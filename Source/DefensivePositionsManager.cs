@@ -5,6 +5,7 @@ using HugsLib.Settings;
 using HugsLib.Utils;
 using RimWorld;
 using UnityEngine;
+using UnofficialMultiplayerAPI;
 using Verse;
 using Verse.Sound;
 
@@ -53,7 +54,7 @@ namespace DefensivePositions {
 		public SettingHandle<ShiftKeyMode> ShiftKeyModeSetting { get; private set; }
 		public SettingHandle<bool> VanillaKeyOverridenSetting { get; private set; }
 
-		private readonly PawnSquadHandler squadHandler;
+		internal readonly PawnSquadHandler squadHandler;
 		private readonly MiscHotkeyHandler miscHotkeys;
 		private bool modeSwitchScheduled;
 		private SoundDef scheduledSound;
@@ -82,7 +83,7 @@ namespace DefensivePositions {
 		public override void FixedUpdate() {
 			if (Current.ProgramState != ProgramState.Playing) return;
 			if (modeSwitchScheduled) {
-				saveData.advancedModeEnabled = !saveData.advancedModeEnabled;
+				ToggleAdvancedMode(!saveData.advancedModeEnabled);
 				modeSwitchScheduled = false;
 			}
 			Reporter.Update();
@@ -116,6 +117,11 @@ namespace DefensivePositions {
 
 		public void ScheduleSoundOnCamera(SoundDef sound) {
 			scheduledSound = sound;
+		}
+
+		[SyncMethod]
+		private void ToggleAdvancedMode(bool enable) {
+			saveData.advancedModeEnabled = enable;
 		}
 
 		// free the "T" key, claimed by vanilla in 1.0. This is only done once and in the interest of not breaking player habits

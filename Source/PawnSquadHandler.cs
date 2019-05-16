@@ -4,6 +4,7 @@ using HugsLib.Utils;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
+using UnofficialMultiplayerAPI;
 using Verse;
 
 namespace DefensivePositions {
@@ -49,28 +50,21 @@ namespace DefensivePositions {
 
 		private void ProcessSquadCommand(int squadNumber) {
 			var assignMode = HugsLibUtility.ControlIsHeld;
-			var pawnSquads = DefensivePositionsManager.Instance.SquadData;
-			var squad = pawnSquads.Find(s => s.squadId == squadNumber);
+			var squad = TryFindSquad(squadNumber);
 			if (assignMode) {
 				// Control is held, assign pawns to squad
 				var idList = new List<int>();
 				foreach (var obj in Find.Selector.SelectedObjects) {
 					var thing = obj as Thing;
-					if(thing == null || thing.Faction == null || !thing.Faction.IsPlayer || !(thing is Pawn || thing is Building)) continue;
+					if(thing?.Faction == null || !thing.Faction.IsPlayer || !(thing is Pawn || thing is Building)) continue;
 					idList.Add(thing.thingIDNumber);
 				}
 				if (idList.Count > 0) {
 					// reassign squad with selected pawns
-					Messages.Message("DefPos_msg_squadAssigned".Translate(idList.Count, squadNumber), MessageTypeDefOf.TaskCompletion);
-					if (squad == null) {
-						squad = new PawnSquad {squadId = squadNumber};
-						pawnSquads.Add(squad);
-					}
-					squad.pawnIds = idList;
+					SetSquadMembers(squadNumber, idList);
 				} else {
 					// no pawns selected, clear squad
-					Messages.Message("DefPos_msg_squadCleared".Translate(squadNumber), MessageTypeDefOf.TaskCompletion);
-					if (squad != null) pawnSquads.Remove(squad);
+					ClearSquad(squadNumber);
 				}
 			} else {
 				// Select pawns that belong to squad
@@ -101,6 +95,30 @@ namespace DefensivePositions {
 				} else {
 					Messages.Message("DefPos_msg_squadEmpty".Translate(squadNumber), MessageTypeDefOf.RejectInput);
 				}
+			}
+		}
+
+		private PawnSquad TryFindSquad(int squadNumber) {
+			var squadsList = DefensivePositionsManager.Instance.SquadData;
+			for (var i = 0; i < squadsList.Count; i++) if (squadsList[i].squadId == squadNumber) return squadsList[i];
+			return null;
+		}
+
+		[SyncMethod]
+		private void SetSquadMembers(int squadNumber, List<int> pawnIds) {
+			var squad = TryFindSquad(squadNumber);
+			if (squad == null) {
+				squad = new PawnSquad {squadId = squadNumber};
+				DefensivePositionsManager.Instance.SquadData.Add(squad);
+			}
+			squad.pawnIds = pawnIds;
+			Messages.Message("DefPos_msg_squadAssigned".Translate(pawnIds.Count, squadNumber), MessageTypeDefOf.TaskCompletion);
+		}
+
+		[SyncMethod]
+		private void ClearSquad(int squadNumber) {
+			if (DefensivePositionsManager.Instance.SquadData.Remove(TryFindSquad(squadNumber))) {
+				Messages.Message("DefPos_msg_squadCleared".Translate(squadNumber), MessageTypeDefOf.TaskCompletion);
 			}
 		}
 

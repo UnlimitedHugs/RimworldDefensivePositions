@@ -2,7 +2,7 @@
 <ModMetaData>
 	<name>Defensive Positions</name>
 	<author>UnlimitedHugs</author>
-	<targetVersion>1.0.0</targetVersion>
+	<supportedVersions><li>1.0</li></supportedVersions>
 	<url>https://ludeon.com/forums/index.php?topic=25535.0</url>
 	
 	<description>Version: 1.7.0

@@ -13,7 +13,7 @@ Allows your colonists to remember their position during base defense. You can se
 &lt;size=20&gt;How to use&lt;/size&gt;
 &lt;b&gt;Set defensive positions for colonists&lt;/b&gt;
 1) Draft your defenders and place them where you want them.
-2) With your defenders selected, hold the Shift key and click the Defensive position button (or press T).
+2) With your defenders selected, right-click the Defensive position button and select "Save defensive position".
 Done. The selected colonists will remember their held positions.
 
 &lt;b&gt;Send colonists to saved positions&lt;/b&gt;
@@ -23,14 +23,15 @@ Your defenders will be drafted and will run to their saved positions.
 
 &lt;b&gt;Advanced mode&lt;/b&gt;
 Hold the Alt key and click the Defensive position button to switch between basic and advanced mode.
-Advanced mode works exactly like Basic, but you have 4 positions to work with. Shift+click a slot to save a position, just click to send the selected pawns to the position they have been assigned under that number.
+Advanced mode works exactly like Basic, but you have 4 positions to work with. Save a position using the right-click menu, then click the slot to send the selected colonists to the position they have been assigned under that number.
 Pressing T is the same as clicking the first slot.
 
 &lt;b&gt;Squad hotkeys&lt;/b&gt;
-Colonists can be assigned to squads for easier selection. To assign, hold the Ctrl key and press 1-9 on the numeric keypad to assign the squad to that key. Press the numeric key of a squad to select the pawns, press again to focus on the squad location.
+Colonists can be assigned to squads for easier selection. To assign, hold the Ctrl key and press 1-9 on the numeric keypad to assign the squad to that key. Press the numeric key of a squad to select the squad members, press again to focus on the squad location.
 
 &lt;b&gt;Utility hotkeys&lt;/b&gt;
 There are three other keys on the keypad for quick colonist management: press period to select all colonists on the map, undraft everyone by pressing divide, and press zero to send all colonists to their assigned defensive position.
+In the Options &gt; Mod Options window you can switch the Shift key from saving positions to queuing movement orders.
 </description>
 	
 </ModMetaData>

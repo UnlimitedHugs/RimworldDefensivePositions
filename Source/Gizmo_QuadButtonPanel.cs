@@ -17,11 +17,14 @@ namespace DefensivePositions {
 
 		private static readonly Color iconBaseColor = new Color(.5f, .5f, .5f, 1f);
 		private static readonly Color iconMouseOverAdd = new Color(.1f, .1f, .1f, 0f);
-		
+
 		// must be static because GizmoOnGUI is called only for the first gizmo, but ProcessInput is called for all grouped gizmos
 		private static int hoveredControlIndex;
 
-		public Texture2D[] iconTextures;
+		public Texture2D atlasTexture;
+		public Rect[] iconUVsInactive;
+		public Rect[] iconUVsActive;
+		public byte activeIconMask;
 		public Action hotkeyAction;
 		public Action<int> iconClickAction;
 		public ISlotAwareContextMenuProvider contextMenuProvider;
@@ -37,38 +40,46 @@ namespace DefensivePositions {
 			var state = GizmoState.Clear;
 			hoveredControlIndex = -1;
 
-			if (iconTextures != null) {
-				for (int i = 0; i < iconTextures.Length; i++) {
-					var iconTex = iconTextures[i];
-					var offset = new Vector2();
-					switch (i) {
-						case 1:
-							offset = new Vector2(IconSize, 0);
-							break;
-						case 2:
-							offset = new Vector2(0, IconSize);
-							break;
-						case 3:
-							offset = new Vector2(IconSize, IconSize);
-							break;
-					}
-					var iconRect = new Rect(contentRect.x + offset.x, contentRect.y + offset.y, contentRect.width / 2f, contentRect.height / 2f);
-					var iconColor = iconBaseColor;
-
-					TooltipHandler.TipRegion(iconRect, string.Format(defaultDesc, i + 1));
-					MouseoverSounds.DoRegion(iconRect, SoundDefOf.Mouseover_Command);
-					if (Mouse.IsOver(iconRect)) {
-						state = GizmoState.Mouseover;
-						iconColor += iconMouseOverAdd;
-						hoveredControlIndex = i;
-					}
-					if (Widgets.ButtonInvisible(iconRect, true)) {
-						hoveredControlIndex = i;
-						state = Event.current.button == 0 ? GizmoState.Interacted : GizmoState.OpenedFloatMenu;
-					}
-
-					Graphics.DrawTexture(iconRect, iconTex, new Rect(0, 0, 1f, 1f), 0, 0, 0, 0, iconColor);
+			for (int i = 0; i < 4; i++) {
+				Vector2 offset;
+				switch (i) {
+					case 1:
+						offset = new Vector2(IconSize, 0);
+						break;
+					case 2:
+						offset = new Vector2(0, IconSize);
+						break;
+					case 3:
+						offset = new Vector2(IconSize, IconSize);
+						break;
+					default: 
+						offset = new Vector2();
+						break;
 				}
+				var iconRect = new Rect(contentRect.x + offset.x, contentRect.y + offset.y, 
+					Mathf.Floor(contentRect.width / 2f), Mathf.Floor(contentRect.height / 2f));
+				var iconColor = iconBaseColor;
+
+				TooltipHandler.TipRegion(iconRect, string.Format(defaultDesc, i + 1));
+				MouseoverSounds.DoRegion(iconRect, SoundDefOf.Mouseover_Command);
+				if (Mouse.IsOver(iconRect)) {
+					Widgets.DrawHighlight(iconRect);
+					state = GizmoState.Mouseover;
+					iconColor += iconMouseOverAdd;
+					hoveredControlIndex = i;
+				}
+				if (Widgets.ButtonInvisible(iconRect, true)) {
+					hoveredControlIndex = i;
+					switch (Event.current.button) {
+						case 0: state = GizmoState.Interacted;
+							break;
+						case 1: state = GizmoState.OpenedFloatMenu;
+							break;
+					}
+				}
+				var iconUVRect = ((activeIconMask & (1 << i)) != 0 ? iconUVsActive : iconUVsInactive)[i];
+
+				Graphics.DrawTexture(iconRect, atlasTexture, iconUVRect, 0, 0, 0, 0, iconColor);
 			}
 
 			DrawHotKeyLabel(gizmoRect);
@@ -91,6 +102,18 @@ namespace DefensivePositions {
 				iconClickAction?.Invoke(hoveredControlIndex);
 			} else {
 				hotkeyAction?.Invoke();
+			}
+		}
+
+		public override bool GroupsWith(Gizmo other) {
+			return other is Gizmo_QuadButtonPanel q && Label == q.Label;
+		}
+
+		public override void MergeWith(Gizmo other) {
+			base.MergeWith(other);
+			// if an icon is active on any of the panels in the group, it will be active on the drawn panel
+			if (other is Gizmo_QuadButtonPanel q) {
+				activeIconMask |= q.activeIconMask;
 			}
 		}
 

@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\Command_ActionWithExternalContextMenu.cs" />
+    <Compile Include="Source\Command_DefensivePositionAction.cs" />
     <Compile Include="Source\Compat_MultiplayerAPI.cs" />
     <Compile Include="Source\DefensivePositionContextMenuProvider.cs" />
     <Compile Include="Source\DefensivePositionsData.cs" />

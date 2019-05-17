@@ -13,9 +13,15 @@ namespace DefensivePositions {
 	public class DefensivePositionContextMenuProvider : ISlotAwareContextMenuProvider {
 		private readonly PawnSavedPositionHandler handler;
 		private int slot;
+		private bool slotSuffix;
 
 		public ISlotAwareContextMenuProvider AtSlot(int newSlotId) {
 			slot = newSlotId;
+			return this;
+		}
+
+		public ISlotAwareContextMenuProvider WithSlotSuffix(bool useSuffix) {
+			slotSuffix = useSuffix;
 			return this;
 		}
 
@@ -24,9 +30,10 @@ namespace DefensivePositions {
 		}
 
 		public IEnumerator<FloatMenuOption> GetEnumerator() {
-			yield return new FloatMenuOption("DefPos_context_assignPosition".Translate(), () => handler.SetDefensivePosition(slot));
+			string TranslateWithSuffix(string key) => key.Translate(slotSuffix ? "DefPos_context_slotSuffix".Translate(slot + 1) : string.Empty);
+			yield return new FloatMenuOption(TranslateWithSuffix("DefPos_context_assignPosition"), () => handler.SetDefensivePosition(slot));
 			if (handler.OwnerHasValidSavedPositionInSlot(slot)) {
-				yield return new FloatMenuOption("DefPos_context_clearPosition".Translate(), () => handler.DiscardSavedPosition(slot));
+				yield return new FloatMenuOption(TranslateWithSuffix("DefPos_context_clearPosition"), () => handler.DiscardSavedPosition(slot));
 			}
 		}
 

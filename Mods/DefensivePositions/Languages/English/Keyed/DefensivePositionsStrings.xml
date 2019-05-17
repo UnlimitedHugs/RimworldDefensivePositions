@@ -12,8 +12,9 @@ Control/Option + click to forget position.
 Alt + click to switch to basic mode.</DefPos_advanced_desc>
 
 	<!-- right-click menu -->
-	<DefPos_context_assignPosition>Save defensive position</DefPos_context_assignPosition>
-	<DefPos_context_clearPosition>Clear saved position</DefPos_context_clearPosition>
+	<DefPos_context_assignPosition>Save defensive position{0}</DefPos_context_assignPosition>
+	<DefPos_context_clearPosition>Clear saved position{0}</DefPos_context_clearPosition>
+	<DefPos_context_slotSuffix> (slot {0})</DefPos_context_slotSuffix>
 
 	<!-- button messages -->
 	<DefPos_msg_noposition>No defensive position set. Click the button while holding Shift to set it.</DefPos_msg_noposition>

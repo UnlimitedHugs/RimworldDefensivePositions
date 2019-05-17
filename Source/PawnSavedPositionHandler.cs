@@ -17,9 +17,10 @@ namespace DefensivePositions {
 		private const int InvalidMapValue = -1;
 
 		private Pawn _owner;
+
 		public Pawn Owner {
 			get {
-				if(_owner == null) DefensivePositionsManager.Instance.Logger.Error("Owner pawn has not been resolved yet\n"+Environment.StackTrace);
+				if (_owner == null) DefensivePositionsManager.Instance.Logger.Error("Owner pawn has not been resolved yet\n" + Environment.StackTrace);
 				return _owner;
 			}
 			set { _owner = value; }
@@ -59,27 +60,32 @@ namespace DefensivePositions {
 
 		public Command GetGizmo(Pawn forPawn) {
 			Owner = forPawn;
-			if(contextMenuProvider == null) contextMenuProvider = new DefensivePositionContextMenuProvider(this);
+			if (contextMenuProvider == null) contextMenuProvider = new DefensivePositionContextMenuProvider(this);
 			if (DefensivePositionsManager.Instance.AdvancedModeEnabled) {
 				return new Gizmo_QuadButtonPanel {
-					iconTextures = Resources.Textures.AdvancedButtonIcons,
+					atlasTexture = Resources.Textures.AdvancedButtonAtlas,
+					iconUVsInactive = Resources.Textures.IconUVsInactive,
+					iconUVsActive = Resources.Textures.IconUVsActive,
+					activeIconMask = GetAdvancedIconActivationMask(),
 					iconClickAction = OnAdvancedGizmoClick,
 					hotkeyAction = OnAdvancedHotkeyDown,
 					hotKey = Resources.Hotkeys.DefensivePositionGizmo,
 					defaultLabel = "DefPos_advanced_label".Translate(),
 					defaultDesc = "DefPos_advanced_desc".Translate(),
 					activateSound = SoundDefOf.Tick_Tiny,
-					contextMenuProvider = contextMenuProvider
+					contextMenuProvider = contextMenuProvider.WithSlotSuffix(true)
 				};
 			} else {
-				return new Command_ActionWithExternalContextMenu {
+				var useActiveIcon = OwnerHasValidSavedPositionInSlot(0);
+				return new Command_DefensivePositionAction {
 					defaultLabel = "DefPos_basic_label".Translate(),
 					defaultDesc = "DefPos_basic_desc".Translate(),
 					hotKey = Resources.Hotkeys.DefensivePositionGizmo,
 					action = OnBasicGizmoAction,
-					icon = Resources.Textures.BasicButton,
+					icon = useActiveIcon ? Resources.Textures.BasicButtonActive : Resources.Textures.BasicButton,
+					hasHighPriorityIcon = useActiveIcon,
 					activateSound = SoundDefOf.Tick_Tiny,
-					contextMenuProvider = contextMenuProvider.AtSlot(0)
+					contextMenuProvider = contextMenuProvider.WithSlotSuffix(false).AtSlot(0)
 				};
 			}
 		}
@@ -98,6 +104,14 @@ namespace DefensivePositions {
 			savedPositions[controlIndex] = IntVec3.Invalid;
 			originalMaps[controlIndex] = InvalidMapValue;
 			DefensivePositionsManager.Instance.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.ClearedPosition, Owner, hadPosition, controlIndex);
+		}
+
+		private byte GetAdvancedIconActivationMask() {
+			int mask = 0;
+			for (int i = 0; i < NumAdvancedPositionButtons; i++) {
+				mask |= (OwnerHasValidSavedPositionInSlot(i) ? 1 : 0) << i;
+			}
+			return (byte)mask;
 		}
 
 		private IntVec3 GetOwnerDestinationOrPosition() {
@@ -161,7 +175,7 @@ namespace DefensivePositions {
 			}
 		}
 
-		
+
 		internal bool OwnerHasValidSavedPositionInSlot(int controlIndex) {
 			// ensures that control index has a saved position and that position was saved on the map the pawn is on
 			return savedPositions[controlIndex].IsValid && originalMaps[controlIndex] == Owner.Map.uniqueID;

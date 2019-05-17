@@ -20,6 +20,11 @@ namespace DefensivePositions {
 			public static JobDef DPDraftToPosition;
 		}
 
+		[DefOf]
+		public static class Things {
+			public static ThingDef DPPositionMote;
+		}
+
 		[StaticConstructorOnStartup]
 		public static class Textures {
 			public static readonly Texture2D BasicButton = ContentFinder<Texture2D>.Get("UIPositionLarge");

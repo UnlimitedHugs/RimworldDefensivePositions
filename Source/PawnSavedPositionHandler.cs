@@ -8,12 +8,22 @@ using Verse;
 using Verse.AI;
 
 namespace DefensivePositions {
+	public interface IDefensivePositionGizmoHandler {
+		void OnBasicGizmoAction();
+		void OnBasicGizmoHover();
+		void OnAdvancedGizmoClick(int controlIndex);
+		void OnAdvancedGizmoHover(int controlIndex);
+		void OnAdvancedGizmoHotkeyDown();
+		IEnumerable<FloatMenuOption> GetGizmoContextMenuOptions(int slotIndex, bool showSlotSuffix);
+	}
+
 	/// <summary>
 	/// Stores position information for a single pawn and displays the gizmo that allows use and modify that information.
 	/// </summary>
-	public class PawnSavedPositionHandler : IExposable {
+	public class PawnSavedPositionHandler : IExposable, IDefensivePositionGizmoHandler {
 		public const int NumAdvancedPositionButtons = 4;
 		public const float HotkeyMultiPressTimeout = .5f;
+		public const float PositionMoteEmissionInterval = .5f;
 		private const int InvalidMapValue = -1;
 
 		private Pawn _owner;
@@ -28,7 +38,7 @@ namespace DefensivePositions {
 
 		private float lastMultiPressTime;
 		private int lastMultiPressSlot;
-		private DefensivePositionContextMenuProvider contextMenuProvider;
+		private float positionMoteExpireTime;
 
 		// --- saved fields ---
 		private List<IntVec3> savedPositions; // the positions saved in the 4 slots for this pawn
@@ -60,38 +70,34 @@ namespace DefensivePositions {
 
 		public Command GetGizmo(Pawn forPawn) {
 			Owner = forPawn;
-			if (contextMenuProvider == null) contextMenuProvider = new DefensivePositionContextMenuProvider(this);
 			if (DefensivePositionsManager.Instance.AdvancedModeEnabled) {
 				return new Gizmo_QuadButtonPanel {
 					atlasTexture = Resources.Textures.AdvancedButtonAtlas,
 					iconUVsInactive = Resources.Textures.IconUVsInactive,
 					iconUVsActive = Resources.Textures.IconUVsActive,
 					activeIconMask = GetAdvancedIconActivationMask(),
-					iconClickAction = OnAdvancedGizmoClick,
-					hotkeyAction = OnAdvancedHotkeyDown,
 					hotKey = Resources.Hotkeys.DefensivePositionGizmo,
 					defaultLabel = "DefPos_advanced_label".Translate(),
 					defaultDesc = "DefPos_advanced_desc".Translate(),
 					activateSound = SoundDefOf.Tick_Tiny,
-					contextMenuProvider = contextMenuProvider.WithSlotSuffix(true)
+					interactionHandler = this
 				};
 			} else {
 				var useActiveIcon = OwnerHasValidSavedPositionInSlot(0);
-				return new Command_DefensivePositionAction {
+				return new Gizmo_DefensivePositionButton {
 					defaultLabel = "DefPos_basic_label".Translate(),
 					defaultDesc = "DefPos_basic_desc".Translate(),
 					hotKey = Resources.Hotkeys.DefensivePositionGizmo,
-					action = OnBasicGizmoAction,
 					icon = useActiveIcon ? Resources.Textures.BasicButtonActive : Resources.Textures.BasicButton,
 					hasHighPriorityIcon = useActiveIcon,
 					activateSound = SoundDefOf.Tick_Tiny,
-					contextMenuProvider = contextMenuProvider.WithSlotSuffix(false).AtSlot(0)
+					interactionHandler = this
 				};
 			}
 		}
 
 		[SyncMethod]
-		internal void SetDefensivePosition(int positionIndex) {
+		private void SetDefensivePosition(int positionIndex) {
 			var targetPos = GetOwnerDestinationOrPosition();
 			savedPositions[positionIndex] = targetPos;
 			originalMaps[positionIndex] = Owner.Map.uniqueID;
@@ -99,7 +105,7 @@ namespace DefensivePositions {
 		}
 
 		[SyncMethod]
-		internal void DiscardSavedPosition(int controlIndex) {
+		private void DiscardSavedPosition(int controlIndex) {
 			var hadPosition = savedPositions[controlIndex].IsValid;
 			savedPositions[controlIndex] = IntVec3.Invalid;
 			originalMaps[controlIndex] = InvalidMapValue;
@@ -118,19 +124,36 @@ namespace DefensivePositions {
 			var curJob = Owner.jobs.curJob;
 			return Owner.Drafted && curJob != null && curJob.def == JobDefOf.Goto ? curJob.targetA.Cell : Owner.Position;
 		}
-
-		private void OnAdvancedHotkeyDown() {
+		
+		public void OnAdvancedGizmoHotkeyDown() {
 			var controlToActivate = GetHotkeyControlIndex();
 			HandleControlInteraction(controlToActivate);
 		}
 
-		private void OnAdvancedGizmoClick(int controlIndex) {
+		public void OnAdvancedGizmoClick(int controlIndex) {
 			DefensivePositionsManager.Instance.LastAdvancedControlUsed = controlIndex;
 			HandleControlInteraction(controlIndex);
 		}
 
 		private void OnBasicGizmoAction() {
 			HandleControlInteraction(0);
+		}
+
+		public void OnBasicGizmoHover() {
+			HighlightDefensivePositionLocation(0);
+		}
+
+		public void OnAdvancedGizmoHover(int controlIndex) {
+			HighlightDefensivePositionLocation(controlIndex);
+		}
+
+		public IEnumerable<FloatMenuOption> GetGizmoContextMenuOptions(int slotIndex, bool showSlotSuffix) {
+			string TranslateWithSuffix(string key) => key.Translate(showSlotSuffix ? "DefPos_context_slotSuffix".Translate(slotIndex + 1) : string.Empty);
+			yield return new FloatMenuOption(TranslateWithSuffix("DefPos_context_assignPosition"), () => SetDefensivePosition(slotIndex));
+			if (OwnerHasValidSavedPositionInSlot(slotIndex)) {
+				yield return new FloatMenuOption(TranslateWithSuffix("DefPos_context_clearPosition"), () => DiscardSavedPosition(slotIndex));
+			}
+			yield return new FloatMenuOption(TranslateWithSuffix("DefPos_context_toggleAdvanced"), () => DefensivePositionsManager.Instance.ScheduleAdvancedModeToggle());
 		}
 
 		private int GetHotkeyControlIndex() {
@@ -187,6 +210,15 @@ namespace DefensivePositions {
 			DefensivePositionsManager.Instance.ScheduleSoundOnCamera(SoundDefOf.DraftOn);
 		}
 
+		private void HighlightDefensivePositionLocation(int controlIndex) {
+			if (positionMoteExpireTime > Time.unscaledTime) return;
+			if (OwnerHasValidSavedPositionInSlot(controlIndex)) {
+				positionMoteExpireTime = Time.unscaledTime + PositionMoteEmissionInterval;
+				var savedPosition = savedPositions[controlIndex];
+				MoteMaker.MakeStaticMote(savedPosition, Owner.Map, Resources.Things.DPPositionMote);
+			}
+		}
+
 		private void InitializePositionList() {
 			savedPositions = new List<IntVec3>(NumAdvancedPositionButtons);
 			originalMaps = new List<int>(NumAdvancedPositionButtons);
@@ -204,6 +236,14 @@ namespace DefensivePositions {
 				this.success = success;
 				this.activatedSlot = activatedSlot;
 			}
+		}
+
+		void IDefensivePositionGizmoHandler.OnBasicGizmoAction() {
+			OnBasicGizmoAction();
+		}
+
+		public override string ToString() {
+			return $"[{nameof(PawnSavedPositionHandler)} {Owner.ToStringSafe()}]";
 		}
 	}
 }

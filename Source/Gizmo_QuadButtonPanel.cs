@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using UnityEngine;
@@ -9,6 +8,8 @@ using Verse.Sound;
 namespace DefensivePositions {
 	/// <summary>
 	/// A gizmo with 4 separate interactable button areas.
+	/// Uses a single atlas texture and requires a set of uv rects to be provided to draw the slot textures.
+	/// Slots can be individually switched to alternative uv coordinates using the <see cref="activeIconMask"/>.
 	/// </summary>
 	public class Gizmo_QuadButtonPanel : Command {
 		private const float ContentPadding = 5f;
@@ -25,12 +26,15 @@ namespace DefensivePositions {
 		public Rect[] iconUVsInactive;
 		public Rect[] iconUVsActive;
 		public byte activeIconMask;
-		public Action hotkeyAction;
-		public Action<int> iconClickAction;
-		public ISlotAwareContextMenuProvider contextMenuProvider;
+		public IDefensivePositionGizmoHandler interactionHandler;
+		private List<IDefensivePositionGizmoHandler> groupedHandlers;
 
 		public override IEnumerable<FloatMenuOption> RightClickFloatMenuOptions {
-			get { return hoveredControlIndex >= 0 ? contextMenuProvider.AtSlot(hoveredControlIndex) : Enumerable.Empty<FloatMenuOption>(); }
+			get {
+				return hoveredControlIndex >= 0
+					? interactionHandler.GetGizmoContextMenuOptions(hoveredControlIndex, true)
+					: Enumerable.Empty<FloatMenuOption>();
+			}
 		}
 
 		public override GizmoResult GizmoOnGUI(Vector2 topLeft, float maxWidth) {
@@ -52,11 +56,11 @@ namespace DefensivePositions {
 					case 3:
 						offset = new Vector2(IconSize, IconSize);
 						break;
-					default: 
+					default:
 						offset = new Vector2();
 						break;
 				}
-				var iconRect = new Rect(contentRect.x + offset.x, contentRect.y + offset.y, 
+				var iconRect = new Rect(contentRect.x + offset.x, contentRect.y + offset.y,
 					Mathf.Floor(contentRect.width / 2f), Mathf.Floor(contentRect.height / 2f));
 				var iconColor = iconBaseColor;
 
@@ -67,13 +71,17 @@ namespace DefensivePositions {
 					state = GizmoState.Mouseover;
 					iconColor += iconMouseOverAdd;
 					hoveredControlIndex = i;
+					groupedHandlers?.ForEach(h => h.OnAdvancedGizmoHover(i));
+					interactionHandler.OnAdvancedGizmoHover(i);
 				}
 				if (Widgets.ButtonInvisible(iconRect, true)) {
 					hoveredControlIndex = i;
 					switch (Event.current.button) {
-						case 0: state = GizmoState.Interacted;
+						case 0:
+							state = GizmoState.Interacted;
 							break;
-						case 1: state = GizmoState.OpenedFloatMenu;
+						case 1:
+							state = GizmoState.OpenedFloatMenu;
 							break;
 					}
 				}
@@ -99,9 +107,9 @@ namespace DefensivePositions {
 		public override void ProcessInput(Event ev) {
 			activateSound?.PlayOneShotOnCamera();
 			if (hoveredControlIndex >= 0) {
-				iconClickAction?.Invoke(hoveredControlIndex);
+				interactionHandler.OnAdvancedGizmoClick(hoveredControlIndex);
 			} else {
-				hotkeyAction?.Invoke();
+				interactionHandler.OnAdvancedGizmoHotkeyDown();
 			}
 		}
 
@@ -113,6 +121,8 @@ namespace DefensivePositions {
 			base.MergeWith(other);
 			// if an icon is active on any of the panels in the group, it will be active on the drawn panel
 			if (other is Gizmo_QuadButtonPanel q) {
+				if (groupedHandlers == null) groupedHandlers = new List<IDefensivePositionGizmoHandler>();
+				groupedHandlers.Add(q.interactionHandler);
 				activeIconMask |= q.activeIconMask;
 			}
 		}

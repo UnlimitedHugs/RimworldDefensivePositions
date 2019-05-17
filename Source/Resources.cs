@@ -4,6 +4,9 @@ using UnityEngine;
 using Verse;
 
 namespace DefensivePositions {
+	/// <summary>
+	/// Stores and resolves references to defs and textures used in the code.
+	/// </summary>
 	public static class Resources {
 		[DefOf]
 		public static class Hotkeys {

@@ -5,9 +5,9 @@ using Verse;
 using Verse.Sound;
 
 namespace DefensivePositions {
-	/**
-	 * Non-squad related hotkey presses are detected and processed here.
-	 */
+	/// <summary>
+	/// Non-squad related hotkey presses are detected and processed here.
+	/// </summary>
 	public class MiscHotkeyHandler {
 		public void OnGUI() {
 			if (Current.ProgramState != ProgramState.Playing || Event.current.type != EventType.KeyDown || Event.current.keyCode == KeyCode.None) return;

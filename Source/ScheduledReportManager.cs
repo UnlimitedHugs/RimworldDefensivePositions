@@ -2,10 +2,10 @@
 using Verse;
 
 namespace DefensivePositions {
-	/**
-	 * Interactions with the control can have different outcomes when multiple pawns are selected. 
-	 * This class collects the data and reports on it on the next frame.
-	 */
+	/// <summary>
+	/// Interactions with the control can have different outcomes when multiple pawns are selected. 
+	/// This class collects the data and reports on it on the next frame.
+	/// </summary>
 	public class ScheduledReportManager {
 		public enum ReportType {
 			SavedPosition,

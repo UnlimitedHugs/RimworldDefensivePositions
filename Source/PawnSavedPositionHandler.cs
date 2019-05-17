@@ -8,9 +8,9 @@ using Verse;
 using Verse.AI;
 
 namespace DefensivePositions {
-	/**
-	 * This is where the gizmos are displayed and the positions are stored for saving.
-	 */
+	/// <summary>
+	/// Stores position information for a single pawn and displays the gizmo that allows use and modify that information.
+	/// </summary>
 	public class PawnSavedPositionHandler : IExposable {
 		public const int NumAdvancedPositionButtons = 4;
 		public const float HotkeyMultiPressTimeout = .5f;

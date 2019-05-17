@@ -4,7 +4,9 @@ using UnityEngine;
 using Verse;
 
 namespace DefensivePositions {
-	// Contains the data stored within a game save
+	/// <summary>
+	/// Contains the data stored within a game save
+	/// </summary>
 	public class DefensivePositionsData : UtilityWorldObject {
 		public bool advancedModeEnabled;
 		public int lastAdvancedControlUsed;

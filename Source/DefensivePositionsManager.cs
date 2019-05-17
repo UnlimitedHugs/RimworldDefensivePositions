@@ -10,9 +10,9 @@ using Verse;
 using Verse.Sound;
 
 namespace DefensivePositions {
-	/**
-	 * The hub of the mod. Stores the handlers for the individual colonists and other support info.
-	 */
+	/// <summary>
+	/// The hub of the mod. Stores the handlers for the individual colonists and other support info.
+	/// </summary>
 	public class DefensivePositionsManager : ModBase {
 		public static DefensivePositionsManager Instance { get; private set; }
 

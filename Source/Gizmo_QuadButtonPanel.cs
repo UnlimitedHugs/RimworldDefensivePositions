@@ -7,9 +7,9 @@ using Verse;
 using Verse.Sound;
 
 namespace DefensivePositions {
-	/**
-	 * A gizmo with 4 separate interactable button areas.
-	 */
+	/// <summary>
+	/// A gizmo with 4 separate interactable button areas.
+	/// </summary>
 	public class Gizmo_QuadButtonPanel : Command {
 		private const float ContentPadding = 5f;
 		private const float GizmoSize = 75f;

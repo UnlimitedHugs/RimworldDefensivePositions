@@ -8,9 +8,9 @@ using UnofficialMultiplayerAPI;
 using Verse;
 
 namespace DefensivePositions {
-	/**
-	 * Allows pawns to be assigned to persistent squads, the members of which can be selected via hotkey press.
-	 */
+	/// <summary>
+	/// Allows pawns to be assigned to persistent squads, the members of which can be selected via hotkey press.
+	/// </summary>
 	public class PawnSquadHandler {
 		private const string SquadHotkeyNameBase = "DPSquad";
 		private const int NumSquadHotkeys = 9;

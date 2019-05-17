@@ -5,7 +5,9 @@ using RimWorld;
 using Verse;
 
 namespace DefensivePositions {
-	// Injects the "Defensive position" control right after the draft pawn toggle.
+	/// <summary>
+	/// Injects the "Defensive position" control right after the draft pawn toggle.
+	/// </summary>
 	[HarmonyPatch(typeof(Pawn_DraftController), "GetGizmos")]
 	internal static class DraftController_GetGizmos_Patch {
 		//Pawn_DraftController: internal IEnumerable<Gizmo> GetGizmos()

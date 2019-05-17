@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using Verse;
 
 namespace DefensivePositions {
-	/**
-	 * Represents a saved squad of pawns or buildings
-	 */
+	/// <summary>
+	/// Represents a saved squad of pawns or buildings
+	/// </summary>
 	public class PawnSquad : IExposable {
 		// the key this squad is assigned to
 		public int squadId;

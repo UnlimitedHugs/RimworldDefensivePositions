@@ -35,6 +35,7 @@ namespace DefensivePositions {
 			if (handler.OwnerHasValidSavedPositionInSlot(slot)) {
 				yield return new FloatMenuOption(TranslateWithSuffix("DefPos_context_clearPosition"), () => handler.DiscardSavedPosition(slot));
 			}
+			yield return new FloatMenuOption(TranslateWithSuffix("DefPos_context_toggleAdvanced"), () => DefensivePositionsManager.Instance.ScheduleAdvancedModeToggle());
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() {

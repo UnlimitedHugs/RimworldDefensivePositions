@@ -168,18 +168,9 @@ namespace DefensivePositions {
 		}
 
 		private void DraftPawnToPosition(Pawn pawn, IntVec3 position) {
-			if (!NextOrderWillBeQueued(pawn)) {
-				DefensivePositionsManager.Instance.ScheduleSoundOnCamera(SoundDefOf.DraftOn);
-			}
 			var job = new Job(Resources.Jobs.DPDraftToPosition, position) {playerForced = true};
 			pawn.jobs.TryTakeOrderedJob(job);
-		}
-
-		private bool NextOrderWillBeQueued(Pawn pawn) {
-			bool currentInterruptible = pawn.jobs.IsCurrentJobPlayerInterruptible(),
-				isIdle = pawn.mindState.IsIdle || pawn.CurJob == null || pawn.CurJob.def.isIdle,
-				queueKeyDown = KeyBindingDefOf.QueueOrder.IsDownEvent;
-			return queueKeyDown && !isIdle && !currentInterruptible;
+			DefensivePositionsManager.Instance.ScheduleSoundOnCamera(SoundDefOf.DraftOn);
 		}
 
 		private void InitializePositionList() {

@@ -42,7 +42,7 @@ Right-click for setting the position and other options.</DefPos_advanced_desc>
 	<setting_slotHotkeyMode_LastUsedSlot>Last slot used</setting_slotHotkeyMode_LastUsedSlot>
 	<setting_slotHotkeyMode_MultiPress>Multi-press</setting_slotHotkeyMode_MultiPress>
 	<setting_shiftKeyMode_label>Shift key mode</setting_shiftKeyMode_label>
-	<setting_shiftKeyMode_desc>Defines what holding the Shift key does in combination with clicking a squad slot or pressing the hotkey. When the Shift key is set to queue orders, colonist positions can be assigned through the right-click menu of the slot.</setting_shiftKeyMode_desc>
+	<setting_shiftKeyMode_desc>Defines what holding the Shift key does in combination with clicking a position slot or pressing the hotkey. When the Shift key is set to queue orders, colonist positions can be assigned through the right-click menu of the slot.</setting_shiftKeyMode_desc>
 	<setting_shiftKeyMode_AssignSlot>Assign slot position</setting_shiftKeyMode_AssignSlot>
 	<setting_shiftKeyMode_QueueOrder>Queue move order</setting_shiftKeyMode_QueueOrder>
 	

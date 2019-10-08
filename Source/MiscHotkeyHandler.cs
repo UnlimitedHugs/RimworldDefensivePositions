@@ -3,6 +3,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
+using Multiplayer.API;
 
 namespace DefensivePositions {
 	/// <summary>
@@ -25,6 +26,7 @@ namespace DefensivePositions {
 			}
 		}
 
+        //[SyncMethod]
 		private void SelectAllColonists() {
 			Find.Selector.ClearSelection();
 			foreach (var pawn in GetColonistsOnVisibleMap()) {
@@ -35,7 +37,8 @@ namespace DefensivePositions {
 			Messages.Message("DefPos_msg_selectedAll".Translate(), MessageTypeDefOf.SilentInput);
 		}
 
-		private void SendAllColonistsToDefensivePosition() {
+        //[SyncMethod]
+        private void SendAllColonistsToDefensivePosition() {
 			var hits = 0;
 			var activatedSlot = 0;
 			foreach (var pawn in GetColonistsOnAllMaps()) {
@@ -54,7 +57,8 @@ namespace DefensivePositions {
 			}
 		}
 
-		private void UndraftAllColonists() {
+        //[SyncMethod]
+        private void UndraftAllColonists() {
 			var hits = 0;
 			foreach (var pawn in GetColonistsOnAllMaps()) {
 				if (pawn.drafter != null && pawn.drafter.Drafted) {

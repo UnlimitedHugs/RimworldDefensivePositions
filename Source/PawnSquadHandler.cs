@@ -4,7 +4,7 @@ using HugsLib.Utils;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
-using UnofficialMultiplayerAPI;
+using Multiplayer.API;
 using Verse;
 
 namespace DefensivePositions {
@@ -14,8 +14,7 @@ namespace DefensivePositions {
 	public class PawnSquadHandler {
 		private const string SquadHotkeyNameBase = "DPSquad";
 		private const int NumSquadHotkeys = 9;
-
-		private readonly List<KeyValuePair<KeyBindingDef, int>> squadKeys = new List<KeyValuePair<KeyBindingDef, int>>();
+        private readonly List<KeyValuePair<KeyBindingDef, int>> squadKeys = new List<KeyValuePair<KeyBindingDef, int>>();
 		
 		public PawnSquadHandler() {
 			PrepareSquadHotkeys();
@@ -40,7 +39,8 @@ namespace DefensivePositions {
 			for (int i = 0; i < squadKeys.Count; i++) {
 				var key = squadKeys[i].Key;
 				KeyBindingData binding;
-				if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(key, out binding) && (pressedKey == binding.keyBindingA || pressedKey == binding.keyBindingB)) {
+                bool rtn = KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(key, out binding);
+                if (rtn && (pressedKey == binding.keyBindingA || pressedKey == binding.keyBindingB)) {
 					ProcessSquadCommand(squadKeys[i].Value);
 					evt.Use();
 					return;
@@ -48,7 +48,7 @@ namespace DefensivePositions {
 			}
 		}
 
-		private void ProcessSquadCommand(int squadNumber) {
+        private void ProcessSquadCommand(int squadNumber) {
 			var assignMode = HugsLibUtility.ControlIsHeld;
 			var squad = TryFindSquad(squadNumber);
 			if (assignMode) {
@@ -106,21 +106,25 @@ namespace DefensivePositions {
 
 		[SyncMethod]
 		private void SetSquadMembers(int squadNumber, List<int> pawnIds) {
-			var squad = TryFindSquad(squadNumber);
+            Log.Message("DefensivePosition: SetSquadMembers");
+            var squad = TryFindSquad(squadNumber);
 			if (squad == null) {
 				squad = new PawnSquad {squadId = squadNumber};
 				DefensivePositionsManager.Instance.SquadData.Add(squad);
 			}
 			squad.pawnIds = pawnIds;
 			Messages.Message("DefPos_msg_squadAssigned".Translate(pawnIds.Count, squadNumber), MessageTypeDefOf.TaskCompletion);
-		}
+            Log.Message("DefensivePosition: SetSquadMembers2");
+        }
 
 		[SyncMethod]
 		private void ClearSquad(int squadNumber) {
-			if (DefensivePositionsManager.Instance.SquadData.Remove(TryFindSquad(squadNumber))) {
+            Log.Message("DefensivePosition: ClearSquad");
+            if (DefensivePositionsManager.Instance.SquadData.Remove(TryFindSquad(squadNumber))) {
 				Messages.Message("DefPos_msg_squadCleared".Translate(squadNumber), MessageTypeDefOf.TaskCompletion);
 			}
-		}
+            Log.Message("DefensivePosition: ClearSquad2");
+        }
 
 		private List<Thing> GetLivePawnsAndBuildingsOnAllMapsById(List<int> thingIds) {
 			var idSet = new HashSet<int>(thingIds);
@@ -129,9 +133,8 @@ namespace DefensivePositions {
 				var map = Current.Game.Maps[i];
 				var candidates = map.mapPawns.AllPawnsSpawned.Cast<Thing>().Concat(map.listerBuildings.allBuildingsColonist.Cast<Thing>());
 				foreach (var thing in candidates) {
-					var pawn = thing as Pawn;
-					if (pawn != null && pawn.Dead) continue;
-					if (idSet.Contains(thing.thingIDNumber)) {
+                    if (thing is Pawn pawn && pawn.Dead) continue;
+                    if (idSet.Contains(thing.thingIDNumber)) {
 						results.Add(thing);
 					} 
 				}

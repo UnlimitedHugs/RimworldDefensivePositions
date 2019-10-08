@@ -36,13 +36,13 @@ namespace DefensivePositions {
 			private const float topRow = 1f - atlasCell;
 			public static readonly Rect[] IconUVsInactive = {
 				new Rect(0, topRow, atlasCell, atlasCell),
-				new Rect(atlasCell, topRow, atlasCell, atlasCell), 
+				new Rect(atlasCell, topRow, atlasCell, atlasCell),
 				new Rect(0, topRow - atlasCell, atlasCell, atlasCell),
 				new Rect(atlasCell, topRow - atlasCell, atlasCell, atlasCell)
 			};
 			public static readonly Rect[] IconUVsActive = {
 				new Rect(atlasCell * 2f, topRow, atlasCell, atlasCell),
-				new Rect(atlasCell * 3f, topRow, atlasCell, atlasCell), 
+				new Rect(atlasCell * 3f, topRow, atlasCell, atlasCell),
 				new Rect(atlasCell * 2f, topRow - atlasCell, atlasCell, atlasCell),
 				new Rect(atlasCell * 3f, topRow - atlasCell, atlasCell, atlasCell)
 			};

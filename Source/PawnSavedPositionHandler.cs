@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using HugsLib.Utils;
 using RimWorld;
 using UnityEngine;
-using UnofficialMultiplayerAPI;
+using Multiplayer.API;
 using Verse;
 using Verse.AI;
 
@@ -98,10 +98,10 @@ namespace DefensivePositions {
 
 		[SyncMethod]
 		private void SetDefensivePosition(int positionIndex) {
-			var targetPos = GetOwnerDestinationOrPosition();
-			savedPositions[positionIndex] = targetPos;
-			originalMaps[positionIndex] = Owner.Map.uniqueID;
-			DefensivePositionsManager.Instance.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SavedPosition, Owner, true, positionIndex);
+            var targetPos = GetOwnerDestinationOrPosition();
+            savedPositions[positionIndex] = targetPos;
+            originalMaps[positionIndex] = Owner.Map.uniqueID;
+            DefensivePositionsManager.Instance.Reporter.ReportPawnInteraction(ScheduledReportManager.ReportType.SavedPosition, Owner, true, positionIndex);
 		}
 
 		[SyncMethod]
@@ -175,6 +175,7 @@ namespace DefensivePositions {
 			}
 		}
 
+        //[SyncMethod]
 		private void HandleControlInteraction(int controlIndex) {
 			var manager = DefensivePositionsManager.Instance;
 			if (HugsLibUtility.ShiftIsHeld && DefensivePositionsManager.Instance.ShiftKeyModeSetting.Value == DefensivePositionsManager.ShiftKeyMode.AssignSlot) {
@@ -204,7 +205,8 @@ namespace DefensivePositions {
 			return savedPositions[controlIndex].IsValid && originalMaps[controlIndex] == Owner.Map.uniqueID;
 		}
 
-		private void DraftPawnToPosition(Pawn pawn, IntVec3 position) {
+        [SyncMethod]
+        private void DraftPawnToPosition(Pawn pawn, IntVec3 position) {
 			var job = new Job(Resources.Jobs.DPDraftToPosition, position) {playerForced = true};
 			pawn.jobs.TryTakeOrderedJob(job);
 			DefensivePositionsManager.Instance.ScheduleSoundOnCamera(SoundDefOf.DraftOn);

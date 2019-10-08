@@ -19,3 +19,4 @@ Version.cpp
 build.js
 *.tmp
 arbiter_log.txt
+.vs

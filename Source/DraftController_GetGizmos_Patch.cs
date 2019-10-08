@@ -5,16 +5,18 @@ using RimWorld;
 using Verse;
 
 namespace DefensivePositions {
-	/// <summary>
-	/// Injects the "Defensive position" control right after the draft pawn toggle.
-	/// </summary>
-	[HarmonyPatch(typeof(Pawn_DraftController), "GetGizmos")]
-	internal static class DraftController_GetGizmos_Patch {
-		//Pawn_DraftController: internal IEnumerable<Gizmo> GetGizmos()
-		[HarmonyPostfix]
-		public static void InsertDefensivePositionGizmo(Pawn_DraftController __instance, ref IEnumerable<Gizmo> __result) {
-			// try insert our gizmo right after the draft toggle
-			var pawn = __instance.pawn;
+    /// <summary>
+    /// Injects the "Defensive position" control right after the draft pawn toggle.
+    /// </summary>
+
+    [HarmonyPatch(typeof(Pawn_DraftController), "GetGizmos")]
+	public class DraftController_GetGizmos_Patch {
+
+        //Pawn_DraftController: internal IEnumerable<Gizmo> GetGizmos()
+        [HarmonyPostfix]
+		public static void InsertDefensivePositionGizmo(ref IEnumerable<Gizmo> __result, ref Pawn_DraftController __instance) {
+            // try insert our gizmo right after the draft toggle
+            var pawn = __instance.pawn;
 			var gizmos = __result.ToList();
 			var draftToggleIndex = TryFindDraftToggleIndex(gizmos);
 			var insertAtIndex = gizmos.Count > 0 ? 1 : 0;
@@ -24,10 +26,11 @@ namespace DefensivePositions {
 				insertAtIndex = draftToggleIndex + 1;
 			}
 			// not drawn if pawn is downed
+
 			if (draftAllowed) {
 				gizmos.Insert(insertAtIndex, DefensivePositionsManager.Instance.GetHandlerForPawn(pawn).GetGizmo(pawn));
+                __result = gizmos;
 			}
-			__result = gizmos;
 		}
 
 		private static int TryFindDraftToggleIndex(List<Gizmo> gizmos) {

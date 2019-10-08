@@ -13,33 +13,40 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>none</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Mods\DefensivePositions\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>Mods\DefensivePositions\Assemblies\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\0Harmony.dll</HintPath>
+      <HintPath>..\0References\0Harmony.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="0MultiplayerAPI">
+      <HintPath>..\0References\0MultiplayerAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="0UnofficialMultiplayerAPI">
-      <HintPath>..\0UnofficialMultiplayerAPI.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\0References\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="HugsLib">
+      <HintPath>..\0References\HugsLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -49,14 +56,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\UnityEngine.dll</HintPath>
+      <HintPath>..\0References\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Gizmo_DefensivePositionButton.cs" />
-    <Compile Include="Source\Compat_MultiplayerAPI.cs" />
     <Compile Include="Source\DefensivePositionsData.cs" />
     <Compile Include="Source\DefensivePositionsManager.cs" />
     <Compile Include="Source\DraftController_GetGizmos_Patch.cs" />
@@ -69,20 +75,10 @@
     <Compile Include="Source\PawnSquadHandler.cs" />
     <Compile Include="Source\ScheduledReportManager.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HugsLibChecker\HugsLibChecker.csproj">
-      <Project>{a7dea100-952b-4516-b020-b66c8bcb4b50}</Project>
-      <Name>HugsLibChecker</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HugsLib\HugsLib.csproj">
-      <Project>{a5d9bd45-533c-4ca0-9298-8950a3da724c}</Project>
-      <Name>HugsLib</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>RimWorldWin64.exe</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

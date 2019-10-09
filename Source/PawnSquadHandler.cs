@@ -106,7 +106,6 @@ namespace DefensivePositions {
 
 		[SyncMethod]
 		private void SetSquadMembers(int squadNumber, List<int> pawnIds) {
-            Log.Message("DefensivePosition: SetSquadMembers");
             var squad = TryFindSquad(squadNumber);
 			if (squad == null) {
 				squad = new PawnSquad {squadId = squadNumber};
@@ -114,16 +113,13 @@ namespace DefensivePositions {
 			}
 			squad.pawnIds = pawnIds;
 			Messages.Message("DefPos_msg_squadAssigned".Translate(pawnIds.Count, squadNumber), MessageTypeDefOf.TaskCompletion);
-            Log.Message("DefensivePosition: SetSquadMembers2");
         }
 
 		[SyncMethod]
 		private void ClearSquad(int squadNumber) {
-            Log.Message("DefensivePosition: ClearSquad");
             if (DefensivePositionsManager.Instance.SquadData.Remove(TryFindSquad(squadNumber))) {
 				Messages.Message("DefPos_msg_squadCleared".Translate(squadNumber), MessageTypeDefOf.TaskCompletion);
 			}
-            Log.Message("DefensivePosition: ClearSquad2");
         }
 
 		private List<Thing> GetLivePawnsAndBuildingsOnAllMapsById(List<int> thingIds) {

@@ -95,12 +95,12 @@ namespace DefensivePositions
             {
                 if (!MP.API.Equals("0.1"))
                 {
-                    Log.Message("DefensivePosition: MP API version mismatch. This mod is designed to work with MPAPI version 0.1");
+                    Log.Error("DefensivePosition: MP API version mismatch. This mod is designed to work with MPAPI version 0.1");
                 }
                 else
                 {
                     MP.RegisterAll();
-                    Log.Message("DefensivePosition: MP init");
+                    //Log.Message("DefensivePosition: MP init");
                 }
                 FirstLaunch = false;
             }

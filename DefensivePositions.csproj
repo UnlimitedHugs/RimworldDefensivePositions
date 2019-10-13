@@ -35,8 +35,8 @@
       <HintPath>..\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="0UnofficialMultiplayerAPI">
-      <HintPath>..\0UnofficialMultiplayerAPI.dll</HintPath>
+    <Reference Include="0MultiplayerAPI">
+      <HintPath>..\0MultiplayerAPI.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\Assembly-CSharp.dll</HintPath>

@@ -5,7 +5,7 @@ using HugsLib.Settings;
 using HugsLib.Utils;
 using RimWorld;
 using UnityEngine;
-using UnofficialMultiplayerAPI;
+using Multiplayer.API;
 using Verse;
 using Verse.Sound;
 
@@ -66,6 +66,10 @@ namespace DefensivePositions {
 			squadHandler = new PawnSquadHandler();
 			miscHotkeys = new MiscHotkeyHandler();
 			Reporter = new ScheduledReportManager();
+		}
+
+		public override void Initialize() {
+			Compat_MultiplayerAPI.Initialize();
 		}
 
 		public override void DefsLoaded() {

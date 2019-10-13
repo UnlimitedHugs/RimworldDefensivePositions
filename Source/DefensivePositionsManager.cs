@@ -5,7 +5,6 @@ using HugsLib.Settings;
 using HugsLib.Utils;
 using RimWorld;
 using UnityEngine;
-using Multiplayer.API;
 using Verse;
 using Verse.Sound;
 
@@ -123,8 +122,7 @@ namespace DefensivePositions {
 			scheduledSound = sound;
 		}
 
-		[SyncMethod]
-		private void ToggleAdvancedMode(bool enable) {
+		internal void ToggleAdvancedMode(bool enable) {
 			saveData.advancedModeEnabled = enable;
 		}
 

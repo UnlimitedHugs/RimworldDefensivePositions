@@ -4,7 +4,6 @@ using HugsLib.Utils;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
-using Multiplayer.API;
 using Verse;
 
 namespace DefensivePositions {
@@ -104,8 +103,7 @@ namespace DefensivePositions {
 			return null;
 		}
 
-		[SyncMethod]
-		private void SetSquadMembers(int squadNumber, List<int> pawnIds) {
+		internal void SetSquadMembers(int squadNumber, List<int> pawnIds) {
 			var squad = TryFindSquad(squadNumber);
 			if (squad == null) {
 				squad = new PawnSquad {squadId = squadNumber};
@@ -115,8 +113,7 @@ namespace DefensivePositions {
 			Messages.Message("DefPos_msg_squadAssigned".Translate(pawnIds.Count, squadNumber), MessageTypeDefOf.TaskCompletion);
 		}
 
-		[SyncMethod]
-		private void ClearSquad(int squadNumber) {
+		internal void ClearSquad(int squadNumber) {
 			if (DefensivePositionsManager.Instance.SquadData.Remove(TryFindSquad(squadNumber))) {
 				Messages.Message("DefPos_msg_squadCleared".Translate(squadNumber), MessageTypeDefOf.TaskCompletion);
 			}

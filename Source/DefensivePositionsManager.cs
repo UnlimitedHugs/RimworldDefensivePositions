@@ -67,7 +67,7 @@ namespace DefensivePositions {
 			Reporter = new ScheduledReportManager();
 		}
 
-		public override void Initialize() {
+		public override void StaticInitialize() {
 			Compat_MultiplayerAPI.Initialize();
 		}
 
@@ -80,7 +80,7 @@ namespace DefensivePositions {
 		}
 
 		public override void WorldLoaded() {
-			saveData = UtilityWorldObjectManager.GetUtilityWorldObject<DefensivePositionsData>();
+			saveData = Find.World.GetComponent<DefensivePositionsData>();
 		}
 
 		public override void FixedUpdate() {

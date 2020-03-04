@@ -4,7 +4,7 @@
 	<author>UnlimitedHugs</author>
 	<supportedVersions><li>1.0</li></supportedVersions>
 	<url>https://ludeon.com/forums/index.php?topic=25535.0</url>
-	
+	<packageId>UnlimitedHugs.DefensivePositions</packageId>
 	<description>Version: 1.8.1
 	
 &lt;size=20&gt;Description&lt;/size&gt;
@@ -32,6 +32,17 @@ Colonists can be assigned to squads for easier selection. To assign, hold the Ct
 &lt;b&gt;Utility hotkeys&lt;/b&gt;
 There are three other keys on the keypad for quick colonist management: press period to select all colonists on the map, undraft everyone by pressing divide, and press zero to send all colonists to their assigned defensive position.
 In the Options &gt; Mod Options window you can switch the Shift key from saving positions to queuing movement orders.
-</description>
+	</description>
+	<modDependencies>
+		<li>
+			<packageId>UnlimitedHugs.HugsLib</packageId>
+			<displayName>HugsLib</displayName>
+			<downloadUrl>https://github.com/UnlimitedHugs/RimworldHugsLib/releases/latest</downloadUrl>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/818773962</steamWorkshopUrl>
+		</li>
+	</modDependencies>
+	<loadAfter>
+		<li>UnlimitedHugs.HugsLib</li>
+	</loadAfter>
 	
 </ModMetaData>

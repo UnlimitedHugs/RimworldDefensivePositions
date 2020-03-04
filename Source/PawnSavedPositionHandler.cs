@@ -145,7 +145,12 @@ namespace DefensivePositions {
 		}
 
 		public IEnumerable<FloatMenuOption> GetGizmoContextMenuOptions(int slotIndex, bool showSlotSuffix) {
-			string TranslateWithSuffix(string key) => key.Translate(showSlotSuffix ? "DefPos_context_slotSuffix".Translate(slotIndex + 1) : string.Empty);
+			string TranslateWithSuffix(string key) {
+				return key.Translate(showSlotSuffix 
+					? "DefPos_context_slotSuffix".Translate(slotIndex + 1) 
+					: (TaggedString)string.Empty
+				);
+			}
 			yield return new FloatMenuOption(TranslateWithSuffix("DefPos_context_assignPosition"), () => SetDefensivePosition(slotIndex));
 			if (OwnerHasValidSavedPositionInSlot(slotIndex)) {
 				yield return new FloatMenuOption(TranslateWithSuffix("DefPos_context_clearPosition"), () => DiscardSavedPosition(slotIndex));

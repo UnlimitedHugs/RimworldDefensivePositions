@@ -43,7 +43,7 @@ namespace DefensivePositions {
 					if (comp == null || thing.InteractionCell != position) continue;
 					var props = comp.Props;
 					if (props == null || props.manWorkType == WorkTags.None || forPawn.story == null || 
-						forPawn.story.WorkTagIsDisabled(props.manWorkType)) continue;
+						forPawn.WorkTagIsDisabled(props.manWorkType)) continue;
 					return comp;
 				}
 			}

@@ -14,21 +14,22 @@ namespace DefensivePositions {
 
 		protected override IEnumerable<Toil> MakeNewToils() {
 			AddFailCondition(() => !pawn.IsColonistPlayerControlled || pawn.Downed || pawn.drafter == null);
-			yield return new Toil {
+			var toil = new Toil {
 				initAction = () => {
 					pawn.drafter.Drafted = true;
 					var turret = TryFindMannableGunAtPosition(pawn, TargetLocA);
 					if (turret != null) {
-						var newJob = new Job(JobDefOf.ManTurret, turret.parent);
-						pawn.jobs.TryTakeOrderedJob(newJob);
+						var manJob = JobMaker.MakeJob(JobDefOf.ManTurret, turret.parent);
+						pawn.jobs.TryTakeOrderedJob(manJob, JobTag.DraftedOrder);
 					} else {
 						var amendedPosition = RCellFinder.BestOrderedGotoDestNear(TargetLocA, pawn);
-						var gotoJob = new Job(JobDefOf.Goto, amendedPosition) {playerForced = true};
-						pawn.jobs.TryTakeOrderedJob(gotoJob);
+						var gotoJob = JobMaker.MakeJob(JobDefOf.Goto, amendedPosition);
+						pawn.jobs.TryTakeOrderedJob(gotoJob, JobTag.DraftedOrder);
 						MoteMaker.MakeStaticMote(amendedPosition, pawn.Map, ThingDefOf.Mote_FeedbackGoto);
 					}
 				}
 			};
+			yield return toil;
 		}
 
 		// check cardinal adjacent cells for mannable things

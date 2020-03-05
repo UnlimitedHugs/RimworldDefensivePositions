@@ -25,7 +25,7 @@ namespace DefensivePositions {
 			}
 			// not drawn if pawn is downed
 			if (draftAllowed) {
-				gizmos.Insert(insertAtIndex, DefensivePositionsManager.Instance.GetHandlerForPawn(pawn).GetGizmo(pawn));
+				gizmos.Insert(insertAtIndex, DefensivePositionsManager.Instance.GetHandlerForPawn(pawn).GetGizmo());
 			}
 			__result = gizmos;
 		}

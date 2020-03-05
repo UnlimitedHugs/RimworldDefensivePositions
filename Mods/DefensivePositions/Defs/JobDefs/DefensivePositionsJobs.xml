@@ -6,5 +6,6 @@
 		<reportString>Moving to defensive position</reportString>
 		<alwaysShowWeapon>true</alwaysShowWeapon>
 		<casualInterruptible>false</casualInterruptible>
+		<playerInterruptible>false</playerInterruptible>
 	</JobDef>
 </Defs>

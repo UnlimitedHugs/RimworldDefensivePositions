@@ -53,10 +53,21 @@ namespace DefensivePositions {
 			if (assignMode) {
 				// Control is held, assign pawns to squad
 				var idList = new List<int>();
+				// include selected map pawns and buildings
 				foreach (var obj in Find.Selector.SelectedObjects) {
-					var thing = obj as Thing;
-					if(thing?.Faction == null || !thing.Faction.IsPlayer || !(thing is Pawn || thing is Building)) continue;
-					idList.Add(thing.thingIDNumber);
+					if (obj is Thing thing && thing.Faction != null && thing.Faction.IsPlayer && (thing is Pawn || thing is Building)) {
+						idList.Add(thing.thingIDNumber);
+					}
+				}
+				// include pawns in selected caravans
+				foreach (var obj in Find.WorldSelector.SelectedObjects) {
+					if (obj is Caravan car && car.Faction != null && car.Faction.IsPlayer && car.pawns != null) {
+						foreach (var pawn in car.pawns) {
+							if (pawn?.Faction != null && pawn.Faction.IsPlayer) {
+								idList.Add(pawn.thingIDNumber);
+							}
+						}
+					}
 				}
 				if (idList.Count > 0) {
 					// reassign squad with selected pawns

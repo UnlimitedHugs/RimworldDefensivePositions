@@ -35,16 +35,16 @@ namespace DefensivePositions {
 		}
 
 		public bool AdvancedModeEnabled {
-			get { return saveData.advancedModeEnabled; }
+			get { return saveData.AdvancedModeEnabled; }
 		}
 
 		public int LastAdvancedControlUsed {
-			get { return saveData.lastAdvancedControlUsed; }
-			set { saveData.lastAdvancedControlUsed = value; }
+			get { return saveData.LastAdvancedControlUsed; }
+			set { saveData.LastAdvancedControlUsed = value; }
 		}
 
 		public List<PawnSquad> SquadData {
-			get { return saveData.pawnSquads; }
+			get { return saveData.PawnSquads; }
 		} 
 
 		public ScheduledReportManager Reporter { get; }
@@ -57,7 +57,7 @@ namespace DefensivePositions {
 		private readonly MiscHotkeyHandler miscHotkeys;
 		private bool modeSwitchScheduled;
 		private SoundDef scheduledSound;
-		private DefensivePositionsData saveData;
+		private WorldData saveData;
 
 
 		private DefensivePositionsManager() {
@@ -67,7 +67,7 @@ namespace DefensivePositions {
 			Reporter = new ScheduledReportManager();
 		}
 
-		public override void Initialize() {
+		public override void StaticInitialize() {
 			Compat_MultiplayerAPI.Initialize();
 		}
 
@@ -80,13 +80,13 @@ namespace DefensivePositions {
 		}
 
 		public override void WorldLoaded() {
-			saveData = UtilityWorldObjectManager.GetUtilityWorldObject<DefensivePositionsData>();
+			saveData = Find.World.GetComponent<WorldData>();
 		}
 
 		public override void FixedUpdate() {
 			if (Current.ProgramState != ProgramState.Playing) return;
 			if (modeSwitchScheduled) {
-				ToggleAdvancedMode(!saveData.advancedModeEnabled);
+				ToggleAdvancedMode(!saveData.AdvancedModeEnabled);
 				modeSwitchScheduled = false;
 			}
 			Reporter.Update();
@@ -102,15 +102,13 @@ namespace DefensivePositions {
 			miscHotkeys.OnGUI();
 		}
 
+		public override void MapDiscarded(Map map) {
+			saveData?.OnMapDiscarded(map);
+		}
+
 		public PawnSavedPositionHandler GetHandlerForPawn(Pawn pawn) {
 			if(saveData == null) throw new Exception("Cannot get handler- saveData not loaded");
-			var pawnId = pawn.thingIDNumber;
-			if (!saveData.handlers.TryGetValue(pawnId, out PawnSavedPositionHandler handler)) {
-				handler = new PawnSavedPositionHandler();
-				saveData.handlers.Add(pawnId, handler);
-			}
-			handler.Owner = pawn;
-			return handler;
+			return saveData.GetOrAddPawnHandler(pawn);
 		}
 
 		// actual switching will occur on next frame- due to possible multiple calls
@@ -123,7 +121,7 @@ namespace DefensivePositions {
 		}
 
 		internal void ToggleAdvancedMode(bool enable) {
-			saveData.advancedModeEnabled = enable;
+			saveData.AdvancedModeEnabled = enable;
 		}
 
 		// free the "T" key, claimed by vanilla in 1.0. This is only done once and in the interest of not breaking player habits

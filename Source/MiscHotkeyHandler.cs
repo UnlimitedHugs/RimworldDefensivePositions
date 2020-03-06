@@ -38,7 +38,7 @@ namespace DefensivePositions {
 		private void SendAllColonistsToDefensivePosition() {
 			var hits = 0;
 			var activatedSlot = 0;
-			foreach (var pawn in GetColonistsOnAllMaps()) {
+			foreach (var pawn in GetColonistsOnVisibleMap()) {
 				if (!pawn.IsColonistPlayerControlled || pawn.Downed) continue;
 				var handler = DefensivePositionsManager.Instance.GetHandlerForPawn(pawn);
 				var result = handler.TrySendPawnToPositionByHotkey();
@@ -71,22 +71,20 @@ namespace DefensivePositions {
 		}
 
 		private IEnumerable<Pawn> GetColonistsOnVisibleMap() {
-			var map = Find.CurrentMap;
-			var result = new List<Pawn>();
-			if (map == null) return result;
-			var playerFaction = Faction.OfPlayer;
-			foreach (var pawn in map.mapPawns.AllPawnsSpawned) {
-				if (pawn.Faction != playerFaction || !pawn.IsColonist) continue;
-				result.Add(pawn);
-			}
-			return result;
+			return GetConlonistsOnMaps(Find.CurrentMap);
+		}
+
+		
+		private IEnumerable<Pawn> GetColonistsOnAllMaps() {
+			return GetConlonistsOnMaps(Current.Game.Maps.ToArray());
 		}
 
 		// make sure to crate a new list, because the map pawn list can change during the operation (pawns carried by other pawns)
-		private IEnumerable<Pawn> GetColonistsOnAllMaps() {
+		private IEnumerable<Pawn> GetConlonistsOnMaps(params Map[] maps) {
 			var result = new List<Pawn>();
 			var playerFaction = Faction.OfPlayer;
-			foreach (var map in Current.Game.Maps) {
+			foreach (var map in maps) {
+				if (map == null) continue;
 				foreach (var pawn in map.mapPawns.AllPawnsSpawned) {
 					if (pawn.Faction != playerFaction || !pawn.IsColonist) continue;
 					result.Add(pawn);

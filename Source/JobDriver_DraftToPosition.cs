@@ -21,6 +21,7 @@ namespace DefensivePositions {
 					if (turret != null) {
 						var manJob = JobMaker.MakeJob(JobDefOf.ManTurret, turret.parent);
 						pawn.jobs.TryTakeOrderedJob(manJob, JobTag.DraftedOrder);
+						MoteMaker.MakeStaticMote(turret.parent.InteractionCell, pawn.Map, ThingDefOf.Mote_FeedbackGoto);
 					} else {
 						var amendedPosition = RCellFinder.BestOrderedGotoDestNear(TargetLocA, pawn);
 						var gotoJob = JobMaker.MakeJob(JobDefOf.Goto, amendedPosition);

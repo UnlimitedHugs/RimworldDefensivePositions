@@ -53,21 +53,9 @@ namespace DefensivePositions {
 			if (assignMode) {
 				// Control is held, assign pawns to squad
 				var idList = new List<int>();
-				// include selected map pawns and buildings
-				foreach (var obj in Find.Selector.SelectedObjects) {
-					if (obj is Thing thing && thing.Faction != null && thing.Faction.IsPlayer && (thing is Pawn || thing is Building)) {
-						idList.Add(thing.thingIDNumber);
-					}
-				}
-				// include pawns in selected caravans
-				foreach (var obj in Find.WorldSelector.SelectedObjects) {
-					if (obj is Caravan car && car.Faction != null && car.Faction.IsPlayer && car.pawns != null) {
-						foreach (var pawn in car.pawns) {
-							if (pawn?.Faction != null && pawn.Faction.IsPlayer) {
-								idList.Add(pawn.thingIDNumber);
-							}
-						}
-					}
+				idList.AddRange(EnumeratePlayerPawnIdsInSelectedCaravans());
+				if (idList.Count == 0) {
+					idList.AddRange(EnumerateSelectedPlayerPawnIdsOnCurrentMap());
 				}
 				if (idList.Count > 0) {
 					// reassign squad with selected pawns
@@ -91,7 +79,7 @@ namespace DefensivePositions {
 				if (matchingThingsOnMaps!=null && matchingThingsOnMaps.Count>0) {
 					var things = SelectOnlyThingsOnSameMap(matchingThingsOnMaps);
 					// focus view on squad if repeat squad key press OR if not currently viewing the map
-					if (Find.CurrentMap != things[0].Map || InWorldView() || ThingsAlreadyMatchSelection(things, selectionBeforeClear)) {	
+					if (Find.CurrentMap != things[0].Map || InWorldView() || ThingsAlreadyMatchSelection(things, selectionBeforeClear)) {
 						TryEscapeWorldView();
 						TryFocusThingGroupCenter(things);
 					}
@@ -104,6 +92,26 @@ namespace DefensivePositions {
 					CameraJumper.TryJumpAndSelect(matchingCaravan);
 				} else {
 					Messages.Message("DefPos_msg_squadEmpty".Translate(squadNumber), MessageTypeDefOf.RejectInput);
+				}
+			}
+		}
+
+		private static IEnumerable<int> EnumeratePlayerPawnIdsInSelectedCaravans() {
+			foreach (var obj in Find.WorldSelector.SelectedObjects) {
+				if (obj is Caravan car && car.Faction != null && car.Faction.IsPlayer && car.pawns != null) {
+					foreach (var pawn in car.pawns) {
+						if (pawn?.Faction != null && pawn.Faction.IsPlayer) {
+							yield return pawn.thingIDNumber;
+						}
+					}
+				}
+			}
+		}
+
+		private static IEnumerable<int> EnumerateSelectedPlayerPawnIdsOnCurrentMap() {
+			foreach (var obj in Find.Selector.SelectedObjects) {
+				if (obj is Thing thing && thing.Faction != null && thing.Faction.IsPlayer && (thing is Pawn || thing is Building)) {
+					yield return thing.thingIDNumber;
 				}
 			}
 		}

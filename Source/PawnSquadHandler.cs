@@ -80,7 +80,6 @@ namespace DefensivePositions {
 							TryEscapeWorldView();
 							TryFocusThingGroupCenter(things);
 						}
-						// select pawns on map, switch map if necessary
 						foreach (var thing in things) {
 							Find.Selector.Select(thing);
 						}

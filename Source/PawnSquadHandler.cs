@@ -182,12 +182,15 @@ namespace DefensivePositions {
 		}
 
 		private bool InWorldView() {
-			return Find.MainTabsRoot.OpenTab == MainButtonDefOf.World;
+			return Find.World.renderer.wantedMode == WorldRenderMode.Planet;
 		}
 
 		private void TryEscapeWorldView() {
 			if(!InWorldView()) return;
-			Find.MainTabsRoot.EscapeCurrentTab();
+			Find.World.renderer.wantedMode = WorldRenderMode.None;
+			if (Find.MainTabsRoot.OpenTab != null) {
+				Find.MainTabsRoot.EscapeCurrentTab();
+			}
 		}
 
 		private bool ThingsAlreadyMatchSelection(List<Thing> things, List<object> selection) {

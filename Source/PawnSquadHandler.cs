@@ -52,14 +52,14 @@ namespace DefensivePositions {
 			var squad = TryFindSquad(squadNumber);
 			if (assignMode) {
 				// Control is held, assign pawns to squad
-				var idList = new List<int>();
-				idList.AddRange(EnumeratePlayerPawnIdsInSelectedCaravans());
-				if (idList.Count == 0) {
-					idList.AddRange(EnumerateSelectedPlayerPawnIdsOnCurrentMap());
+				var members = new List<Thing>();
+				members.AddRange(EnumeratePlayerPawnsInSelectedCaravans());
+				if (members.Count == 0) {
+					members.AddRange(EnumerateSelectedPlayerThingsOnCurrentMap());
 				}
-				if (idList.Count > 0) {
+				if (members.Count > 0) {
 					// reassign squad with selected pawns
-					SetSquadMembers(squadNumber, idList);
+					SetSquadMembers(squadNumber, members);
 				} else {
 					// no pawns selected, clear squad
 					ClearSquad(squadNumber);
@@ -68,68 +68,75 @@ namespace DefensivePositions {
 				// Select pawns that belong to squad
 				var selectionBeforeClear = Find.Selector.SelectedObjects.ToList();
 				if(!HugsLibUtility.ShiftIsHeld) Find.Selector.ClearSelection();
-				List<Thing> matchingThingsOnMaps = null;
-				Caravan matchingCaravan = null;
-				if (squad != null && squad.pawnIds.Count > 0) {
-					matchingThingsOnMaps = GetLivePawnsAndBuildingsOnAllMapsById(squad.pawnIds);
-					if (matchingThingsOnMaps.Count == 0) {
-						matchingCaravan = TryGetFirstCaravanWithPawnsById(squad.pawnIds);
+				var members = squad?.ValidMembers.ToArray();
+				if (members != null && members.Length > 0) {
+					var matchingCaravans = EnumerateCaravansWithPawns(members.OfType<Pawn>()).ToArray();
+					if (matchingCaravans.Length > 0) {
+						SelectAndFocusWorldObjects(matchingCaravans);
+					} else {
+						var things = SelectOnlyThingsOnSameMap(squad.members);
+						// focus view on squad if repeat squad key press OR if not currently viewing the map
+						if (Find.CurrentMap != things[0].Map || InWorldView() || ThingsAlreadyMatchSelection(things, selectionBeforeClear)) {
+							TryEscapeWorldView();
+							TryFocusThingGroupCenter(things);
+						}
+						// select pawns on map, switch map if necessary
+						foreach (var thing in things) {
+							Find.Selector.Select(thing);
+						}
 					}
-				}
-				if (matchingThingsOnMaps!=null && matchingThingsOnMaps.Count>0) {
-					var things = SelectOnlyThingsOnSameMap(matchingThingsOnMaps);
-					// focus view on squad if repeat squad key press OR if not currently viewing the map
-					if (Find.CurrentMap != things[0].Map || InWorldView() || ThingsAlreadyMatchSelection(things, selectionBeforeClear)) {
-						TryEscapeWorldView();
-						TryFocusThingGroupCenter(things);
-					}
-					// select pawns on map, switch map if necessary
-					foreach (var thing in things) {
-						Find.Selector.Select(thing);
-					}
-				} else if (matchingCaravan != null) {
-					// select caravan with pawns
-					CameraJumper.TryJumpAndSelect(matchingCaravan);
 				} else {
 					Messages.Message("DefPos_msg_squadEmpty".Translate(squadNumber), MessageTypeDefOf.RejectInput);
 				}
 			}
 		}
 
-		private static IEnumerable<int> EnumeratePlayerPawnIdsInSelectedCaravans() {
+		private static IEnumerable<Pawn> EnumeratePlayerPawnsInSelectedCaravans() {
 			foreach (var obj in Find.WorldSelector.SelectedObjects) {
 				if (obj is Caravan car && car.Faction != null && car.Faction.IsPlayer && car.pawns != null) {
 					foreach (var pawn in car.pawns) {
 						if (pawn?.Faction != null && pawn.Faction.IsPlayer) {
-							yield return pawn.thingIDNumber;
+							yield return pawn;
 						}
 					}
 				}
 			}
 		}
 
-		private static IEnumerable<int> EnumerateSelectedPlayerPawnIdsOnCurrentMap() {
+		private static IEnumerable<Thing> EnumerateSelectedPlayerThingsOnCurrentMap() {
 			foreach (var obj in Find.Selector.SelectedObjects) {
 				if (obj is Thing thing && thing.Faction != null && thing.Faction.IsPlayer && (thing is Pawn || thing is Building)) {
-					yield return thing.thingIDNumber;
+					yield return thing;
 				}
+			}
+		}
+
+		private static void SelectAndFocusWorldObjects(IEnumerable<WorldObject> objects) {
+			CameraJumper.TryJump(objects.FirstOrDefault());
+			Find.WorldSelector.ClearSelection();
+			foreach (var obj in objects) {
+				Find.WorldSelector.Select(obj);
 			}
 		}
 
 		private PawnSquad TryFindSquad(int squadNumber) {
 			var squadsList = DefensivePositionsManager.Instance.SquadData;
-			for (var i = 0; i < squadsList.Count; i++) if (squadsList[i].squadId == squadNumber) return squadsList[i];
+			for (var i = 0; i < squadsList.Count; i++) {
+				if (squadsList[i].SquadId == squadNumber) {
+					return squadsList[i];
+				}
+			}
 			return null;
 		}
 
-		internal void SetSquadMembers(int squadNumber, List<int> pawnIds) {
+		internal void SetSquadMembers(int squadNumber, List<Thing> members) {
 			var squad = TryFindSquad(squadNumber);
 			if (squad == null) {
-				squad = new PawnSquad {squadId = squadNumber};
+				squad = new PawnSquad {SquadId = squadNumber};
 				DefensivePositionsManager.Instance.SquadData.Add(squad);
 			}
-			squad.pawnIds = pawnIds;
-			Messages.Message("DefPos_msg_squadAssigned".Translate(pawnIds.Count, squadNumber), MessageTypeDefOf.TaskCompletion);
+			squad.AssignMembers(members);
+			Messages.Message("DefPos_msg_squadAssigned".Translate(members.Count, squadNumber), MessageTypeDefOf.TaskCompletion);
 		}
 
 		internal void ClearSquad(int squadNumber) {
@@ -137,26 +144,9 @@ namespace DefensivePositions {
 				Messages.Message("DefPos_msg_squadCleared".Translate(squadNumber), MessageTypeDefOf.TaskCompletion);
 			}
 		}
-
-		private List<Thing> GetLivePawnsAndBuildingsOnAllMapsById(List<int> thingIds) {
-			var idSet = new HashSet<int>(thingIds);
-			var results = new List<Thing>();
-			for (int i = 0; i < Current.Game.Maps.Count; i++) {
-				var map = Current.Game.Maps[i];
-				var candidates = map.mapPawns.AllPawnsSpawned.Cast<Thing>().Concat(map.listerBuildings.allBuildingsColonist.Cast<Thing>());
-				foreach (var thing in candidates) {
-					var pawn = thing as Pawn;
-					if (pawn != null && pawn.Dead) continue;
-					if (idSet.Contains(thing.thingIDNumber)) {
-						results.Add(thing);
-					} 
-				}
-			}
-			return results;
-		}
-
+		
 		// filter the list by dropping all pawns that are on a different map than the first one
-		private List<Thing> SelectOnlyThingsOnSameMap(List<Thing> things) {
+		private List<Thing> SelectOnlyThingsOnSameMap(IEnumerable<Thing> things) {
 			Map firstMap = null;
 			var results = new List<Thing>();
 			foreach (var thing in things) {
@@ -167,15 +157,17 @@ namespace DefensivePositions {
 			return results;
 		}
 
-		private Caravan TryGetFirstCaravanWithPawnsById(List<int> pawnIds) {
+		private IEnumerable<Caravan> EnumerateCaravansWithPawns(IEnumerable<Pawn> pawns) {
 			var caravans = Find.WorldObjects.Caravans;
+			var pawnSet = pawns.ToHashSet();
 			foreach (var caravan in caravans) {
 				if(!caravan.IsPlayerControlled) continue;
 				foreach (var pawn in caravan.PawnsListForReading) {
-					if (pawnIds.Contains(pawn.thingIDNumber)) return caravan;
+					if (pawnSet.Contains(pawn)) {
+						yield return caravan;
+					}
 				}
 			}
-			return null;
 		}
 
 		// switches to the map the pawns are on and moves the camera to the center point of the group

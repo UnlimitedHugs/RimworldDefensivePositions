@@ -48,12 +48,13 @@ namespace DefensivePositions {
 			var mode = Scribe.mode;
 			Scribe_Values.Look(ref advancedModeEnabled, "advancedModeEnabled");
 			Scribe_Values.Look(ref lastAdvancedControlUsed, "lastAdvancedControlUsed");
-			Scribe_Collections.Look(ref pawnSquads, "pawnSquads", LookMode.Deep);
 			if (mode == LoadSaveMode.Saving) {
 				// convert to list first- we can get the keys from the handlers at load time
 				tempHandlerSavingList = HandlerListFromDictionary(handlers);
+				DiscardNonSaveWorthySquads();
 			}
 			Scribe_Collections.Look(ref tempHandlerSavingList, "savedPositions", LookMode.Deep);
+			Scribe_Collections.Look(ref pawnSquads, "pawnSquads", LookMode.Deep);
 			if (mode == LoadSaveMode.PostLoadInit) {
 				handlers = HandlerListToDictionary(tempHandlerSavingList);
 				tempHandlerSavingList = null;
@@ -78,6 +79,10 @@ namespace DefensivePositions {
 			return (list ?? Enumerable.Empty<PawnSavedPositionHandler>())
 				.Where(psp => psp?.Owner != null)
 				.ToDictionary(psp => psp.Owner, v => v);
+		}
+
+		private void DiscardNonSaveWorthySquads() {
+			pawnSquads.RemoveAll(s => s == null || !s.ShouldBeSaved);
 		}
 	}
 }

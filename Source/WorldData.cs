@@ -53,10 +53,7 @@ namespace DefensivePositions {
 				// convert to list first- we can get the keys from the handlers at load time
 				tempHandlerSavingList = HandlerListFromDictionary(handlers);
 			}
-			if (mode == LoadSaveMode.Saving || mode == LoadSaveMode.LoadingVars) {
-				// prevent loaded values from being reset during resolve crossrefs phase
-				Scribe_Collections.Look(ref tempHandlerSavingList, "savedPositions", LookMode.Deep);
-			}
+			Scribe_Collections.Look(ref tempHandlerSavingList, "savedPositions", LookMode.Deep);
 			if (mode == LoadSaveMode.PostLoadInit) {
 				handlers = HandlerListToDictionary(tempHandlerSavingList);
 				tempHandlerSavingList = null;

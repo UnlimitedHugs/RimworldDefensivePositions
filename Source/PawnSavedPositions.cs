@@ -31,10 +31,7 @@ namespace DefensivePositions {
 				// convert to list first. Using a nested list as a value in a dictionary is not valid
 				tempPositionSavingList = MapPositionSet.ListFromDictionary(savedPositions);
 			}
-			if (mode == LoadSaveMode.Saving || mode == LoadSaveMode.LoadingVars) {
-				// prevent loaded values from being reset during resolve crossrefs phase
-				Scribe_Collections.Look(ref tempPositionSavingList, "positions", LookMode.Deep);
-			}
+			Scribe_Collections.Look(ref tempPositionSavingList, "positions", LookMode.Deep);
 			if (mode == LoadSaveMode.PostLoadInit) {
 				savedPositions = MapPositionSet.ListToDictionary(tempPositionSavingList);
 				tempPositionSavingList = null;

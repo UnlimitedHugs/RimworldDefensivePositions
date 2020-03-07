@@ -51,7 +51,8 @@ namespace DefensivePositions {
 
 		public SettingHandle<HotkeyMode> SlotHotkeySetting { get; private set; }
 		public SettingHandle<ShiftKeyMode> ShiftKeyModeSetting { get; private set; }
-		public SettingHandle<bool> VanillaKeyOverridenSetting { get; private set; }
+		public SettingHandle<int> SameGroupDistanceSetting { get; set; }
+		private SettingHandle<bool> VanillaKeyOverridenSetting { get; set; }
 
 		internal readonly PawnSquadHandler squadHandler;
 		private readonly MiscHotkeyHandler miscHotkeys;
@@ -72,10 +73,20 @@ namespace DefensivePositions {
 		}
 
 		public override void DefsLoaded() {
-			SlotHotkeySetting = Settings.GetHandle("slotHotkeyMode", "setting_slotHotkeyMode_label".Translate(), "setting_slotHotkeyMode_desc".Translate(), HotkeyMode.MultiPress, null, "setting_slotHotkeyMode_");
+			SlotHotkeySetting = Settings.GetHandle("slotHotkeyMode", 
+				"setting_slotHotkeyMode_label".Translate(), "setting_slotHotkeyMode_desc".Translate(), 
+				HotkeyMode.MultiPress, null, "setting_slotHotkeyMode_");
 			VanillaKeyOverridenSetting = Settings.GetHandle("vanillaKeyOverriden", null, null, false);
 			VanillaKeyOverridenSetting.NeverVisible = true;
-			ShiftKeyModeSetting = Settings.GetHandle("shiftKeyMode", "setting_shiftKeyMode_label".Translate(), "setting_shiftKeyMode_desc".Translate(), ShiftKeyMode.AssignSlot, null, "setting_shiftKeyMode_");
+			VanillaKeyOverridenSetting.CanBeReset = false;
+			ShiftKeyModeSetting = Settings.GetHandle("shiftKeyMode", 
+				"setting_shiftKeyMode_label".Translate(), "setting_shiftKeyMode_desc".Translate(), 
+				ShiftKeyMode.AssignSlot, null, "setting_shiftKeyMode_");
+			const int defaultSameGroupDistance = 30;
+			SameGroupDistanceSetting = Settings.GetHandle("sameGroupDistance", "settings_sameGroupDistance_label".Translate(), 
+				"settings_sameGroupDistance_desc".Translate(), defaultSameGroupDistance);
+			SameGroupDistanceSetting.Validator = Validators.IntRangeValidator(0, 1000);
+			SameGroupDistanceSetting.SpinnerIncrement = 5;
 			OverrideVanillaKeyIfNeeded();
 		}
 

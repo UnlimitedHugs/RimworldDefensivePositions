@@ -19,7 +19,7 @@ namespace DefensivePositions {
 				MP.RegisterSyncMethod(typeof(DefensivePositionsManager), nameof(DefensivePositionsManager.ToggleAdvancedMode));
 				MP.RegisterSyncMethod(typeof(PawnSavedPositionHandler), nameof(PawnSavedPositionHandler.SetDefensivePosition));
 				MP.RegisterSyncMethod(typeof(PawnSavedPositionHandler), nameof(PawnSavedPositionHandler.DiscardSavedPosition));
-				MP.RegisterSyncMethod(typeof(PawnSquadHandler), nameof(PawnSquadHandler.SetSquadMembers));
+				MP.RegisterSyncMethod(typeof(PawnSquadHandler), nameof(PawnSquadHandler.ReassignSquadMembers));
 				MP.RegisterSyncMethod(typeof(PawnSquadHandler), nameof(PawnSquadHandler.ClearSquad));
 
 				// register instance resolvers

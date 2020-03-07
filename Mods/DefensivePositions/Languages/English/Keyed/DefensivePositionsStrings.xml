@@ -45,5 +45,7 @@ Right-click for setting the position and other options.</DefPos_advanced_desc>
 	<setting_shiftKeyMode_desc>Defines what holding the Shift key does in combination with clicking a position slot or pressing the hotkey. When the Shift key is set to queue orders, colonist positions can be assigned through the right-click menu of the slot.</setting_shiftKeyMode_desc>
 	<setting_shiftKeyMode_AssignSlot>Assign slot position</setting_shiftKeyMode_AssignSlot>
 	<setting_shiftKeyMode_QueueOrder>Queue move order</setting_shiftKeyMode_QueueOrder>
+	<settings_sameGroupDistance_label>Same group distance</settings_sameGroupDistance_label>
+	<settings_sameGroupDistance_desc>How far from each other colonists can be to be considered as part of the same group when cycling between squad locations.\nSet this to a low number (0+) to cycle between squad members individually.\nSet this to a high number like 1000 to only cycle between maps occupied by members of the same squad.</settings_sameGroupDistance_desc>
 	
 </LanguageData>

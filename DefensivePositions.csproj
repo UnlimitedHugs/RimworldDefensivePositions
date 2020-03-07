@@ -73,6 +73,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Gizmo_DefensivePositionButton.cs" />
     <Compile Include="Source\Compat_MultiplayerAPI.cs" />
+    <Compile Include="Source\PawnSquadSelector.cs" />
     <Compile Include="Source\WorldData.cs" />
     <Compile Include="Source\DefensivePositionsManager.cs" />
     <Compile Include="Source\DraftController_GetGizmos_Patch.cs" />

@@ -52,6 +52,7 @@ namespace DefensivePositions {
 		public SettingHandle<HotkeyMode> SlotHotkeySetting { get; private set; }
 		public SettingHandle<ShiftKeyMode> ShiftKeyModeSetting { get; private set; }
 		public SettingHandle<int> SameGroupDistanceSetting { get; set; }
+		public SettingHandle<bool> JumpingSelectsNearbySetting { get; set; }
 		private SettingHandle<bool> VanillaKeyOverridenSetting { get; set; }
 
 		internal readonly PawnSquadHandler squadHandler;
@@ -87,6 +88,8 @@ namespace DefensivePositions {
 				"settings_sameGroupDistance_desc".Translate(), defaultSameGroupDistance);
 			SameGroupDistanceSetting.Validator = Validators.IntRangeValidator(0, 1000);
 			SameGroupDistanceSetting.SpinnerIncrement = 5;
+			JumpingSelectsNearbySetting = Settings.GetHandle("jumpingSelectsNearby",
+				"settings_jumpingSelectsNearby_label".Translate(), "settings_jumpingSelectsNearby_desc".Translate(), true);
 			OverrideVanillaKeyIfNeeded();
 		}
 

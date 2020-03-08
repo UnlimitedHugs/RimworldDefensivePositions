@@ -42,15 +42,20 @@ namespace DefensivePositions {
 				// if all squad members have been despawned, and not found in any caravan, report squad as unassigned
 				if (potentialInterestPoints.Count > 0) {
 					// loop back to fist target after reaching the end
-					var currentActivationTarget = potentialInterestPoints[interestPointIndex % potentialInterestPoints.Count];
-					var shouldJumpToTarget = currentActivationTarget.IsWorldTarget
+					var currentInterestPoint = potentialInterestPoints[interestPointIndex % potentialInterestPoints.Count];
+					var shouldJumpToInterestPoint = currentInterestPoint.IsWorldTarget
 											|| !isFirstActivationInSequence
-											|| CurrentlyViewedMap != currentActivationTarget.Map;
-					if (shouldJumpToTarget) {
-						CameraJumper.TryJump(currentActivationTarget);
+											|| CurrentlyViewedMap != currentInterestPoint.Map;
+					if (shouldJumpToInterestPoint) {
+						CameraJumper.TryJump(currentInterestPoint);
 						interestPointIndex++;
 					}
-					TrySelectActivationTargetSquadMembers(members, currentActivationTarget);
+					IEnumerable<Thing> selectableSquadMembers = members;
+					if (!isFirstActivationInSequence) {
+						// first activation does not jump, but always selects all members on current map
+						selectableSquadMembers = FilterSelectableMembersByDistanceIfNeeded(selectableSquadMembers, currentInterestPoint);
+					}
+					TrySelectInterestPointSquadMembers(selectableSquadMembers, currentInterestPoint);
 					return true;
 				}
 			}
@@ -189,17 +194,26 @@ namespace DefensivePositions {
 			return members.Where(t => t.Map == currentMap);
 		}
 
-		private static void TrySelectActivationTargetSquadMembers(IEnumerable<Thing> squadMembers, GlobalTargetInfo activationTarget) {
+		private static IEnumerable<Thing> FilterSelectableMembersByDistanceIfNeeded(IEnumerable<Thing> squadMembers, GlobalTargetInfo interestPoint) {
+			var selectOnlyNearJumpTarget = DefensivePositionsManager.Instance.JumpingSelectsNearbySetting.Value;
+			if (selectOnlyNearJumpTarget && interestPoint.IsMapTarget) {
+				var maximumSelectionRadius = DefensivePositionsManager.Instance.SameGroupDistanceSetting.Value;
+				return squadMembers.Where(t => t.Position.DistanceTo(interestPoint.Cell) <= maximumSelectionRadius);
+			}
+			return squadMembers;
+		}
+
+		private static void TrySelectInterestPointSquadMembers(IEnumerable<Thing> squadMembers, GlobalTargetInfo interestPoint) {
 			var additiveSelection = HugsLibUtility.ShiftIsHeld;
-			if (activationTarget.HasWorldObject) {
+			if (interestPoint.HasWorldObject) {
 				// current target is a caravan
 				if (!additiveSelection) Find.WorldSelector.ClearSelection();
 				Find.WorldSelector.ClearSelection();
-				Find.WorldSelector.Select(activationTarget.WorldObject);
+				Find.WorldSelector.Select(interestPoint.WorldObject);
 			} else {
 				// current target must be a map location
 				if (!additiveSelection) Find.Selector.ClearSelection();
-				var currentMap = activationTarget.Map;
+				var currentMap = interestPoint.Map;
 				if (currentMap != null) {
 					var squadMembersOnCurrentMap = FilterThingsByMap(squadMembers, currentMap);
 					foreach (var thing in squadMembersOnCurrentMap) {

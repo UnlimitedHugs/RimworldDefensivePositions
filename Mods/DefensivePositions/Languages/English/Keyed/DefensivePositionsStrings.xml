@@ -45,7 +45,8 @@ Right-click for setting the position and other options.</DefPos_advanced_desc>
 	<setting_shiftKeyMode_desc>Defines what holding the Shift key does in combination with clicking a position slot or pressing the hotkey. When the Shift key is set to queue orders, colonist positions can be assigned through the right-click menu of the slot.</setting_shiftKeyMode_desc>
 	<setting_shiftKeyMode_AssignSlot>Assign slot position</setting_shiftKeyMode_AssignSlot>
 	<setting_shiftKeyMode_QueueOrder>Queue move order</setting_shiftKeyMode_QueueOrder>
-	<settings_sameGroupDistance_label>Same group distance</settings_sameGroupDistance_label>
-	<settings_sameGroupDistance_desc>How far from each other colonists can be to be considered as part of the same group when cycling between squad locations.\nSet this to a low number (0+) to cycle between squad members individually.\nSet this to a high number like 1000 to only cycle between maps occupied by members of the same squad.</settings_sameGroupDistance_desc>
-	
+	<settings_sameGroupDistance_label>Jump group distance</settings_sameGroupDistance_label>
+	<settings_sameGroupDistance_desc>How far from each other colonists can be to be considered as part of the same group when jumping between squad locations by pressing the squad key multiple times.\nSet this to a low number (0+) to jump between squad members individually.\nSet this to a high number like 1000 to only jump between maps occupied by members of the same squad.</settings_sameGroupDistance_desc>
+	<settings_jumpingSelectsNearby_label>Jumping selects only nearby members</settings_jumpingSelectsNearby_label>
+	<settings_jumpingSelectsNearby_desc>Affects what gets selected when jumping between members of a squad by pressing the squad key multiple times.\nWhen enabled, only other members close to the focused location are selected, otherwise always selects all squad members on the current map.</settings_jumpingSelectsNearby_desc>
 </LanguageData>

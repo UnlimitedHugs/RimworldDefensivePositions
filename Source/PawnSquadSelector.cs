@@ -63,7 +63,7 @@ namespace DefensivePositions {
 				lastActivatedSquadId = activatedSquad.SquadId;
 				interestPointIndex = 0;
 				lastStartingMapIndex = CurrentlyViewedMap?.Index;
-				lastStartingMapCameraPosition = Find.CurrentMap.rememberedCameraPos.rootPos.ToIntVec3();
+				lastStartingMapCameraPosition = Find.CurrentMap?.rememberedCameraPos?.rootPos.ToIntVec3() ?? IntVec3.Zero;
 				isFirstActivation = true;
 			} else {
 				isFirstActivation = false;

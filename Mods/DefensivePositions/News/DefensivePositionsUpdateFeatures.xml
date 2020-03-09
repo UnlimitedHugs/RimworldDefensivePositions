@@ -19,4 +19,13 @@
 		<content>- Defensive Positions is now compatible with Zetrith's Multiplayer mod.|- The shift key can now be used to queue movement orders. This can be enabled via a setting in Options &gt; Mod Options.</content>
 	</HugsLib.UpdateFeatureDef>
 	
+	<HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+		<defName>DefensivePositions_1_9_1</defName>
+		<assemblyVersion>1.9.1</assemblyVersion>
+		<content>
+- Caravans can now be assigned to squads from the world map.|
+- Pressing a squad key repeatedly will cycle through all places its members are found in. Also works for caravans and on multiple maps.
+		</content>
+	</HugsLib.UpdateFeatureDef>
+	
 </Defs>

@@ -89,7 +89,7 @@ namespace DefensivePositions {
 			SameGroupDistanceSetting.Validator = Validators.IntRangeValidator(0, 1000);
 			SameGroupDistanceSetting.SpinnerIncrement = 5;
 			JumpingSelectsNearbySetting = Settings.GetHandle("jumpingSelectsNearby",
-				"settings_jumpingSelectsNearby_label".Translate(), "settings_jumpingSelectsNearby_desc".Translate(), true);
+				"settings_jumpingSelectsNearby_label".Translate(), "settings_jumpingSelectsNearby_desc".Translate(), false);
 			OverrideVanillaKeyIfNeeded();
 		}
 

@@ -7,6 +7,8 @@ bin/
 obj/
 Debug/
 Release/
+.idea/
+packages/
 *.opensdf
 *.tlog
 *.log

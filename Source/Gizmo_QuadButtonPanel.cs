@@ -74,7 +74,7 @@ namespace DefensivePositions {
 					groupedHandlers?.ForEach(h => h.OnAdvancedGizmoHover(i));
 					interactionHandler.OnAdvancedGizmoHover(i);
 				}
-				if (Widgets.ButtonInvisible(iconRect, true)) {
+				if (Widgets.ButtonInvisible(iconRect)) {
 					hoveredControlIndex = i;
 					switch (Event.current.button) {
 						case 0:

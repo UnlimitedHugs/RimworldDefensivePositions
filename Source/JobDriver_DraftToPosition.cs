@@ -21,12 +21,12 @@ namespace DefensivePositions {
 					if (turret != null) {
 						var manJob = JobMaker.MakeJob(JobDefOf.ManTurret, turret.parent);
 						pawn.jobs.TryTakeOrderedJob(manJob, JobTag.DraftedOrder);
-						MoteMaker.MakeStaticMote(turret.parent.InteractionCell, pawn.Map, ThingDefOf.Mote_FeedbackGoto);
+						FleckMaker.Static(turret.parent.InteractionCell, pawn.Map, FleckDefOf.FeedbackGoto);
 					} else {
 						var amendedPosition = RCellFinder.BestOrderedGotoDestNear(TargetLocA, pawn);
 						var gotoJob = JobMaker.MakeJob(JobDefOf.Goto, amendedPosition);
 						pawn.jobs.TryTakeOrderedJob(gotoJob, JobTag.DraftedOrder);
-						MoteMaker.MakeStaticMote(amendedPosition, pawn.Map, ThingDefOf.Mote_FeedbackGoto);
+						FleckMaker.Static(amendedPosition, pawn.Map, FleckDefOf.FeedbackGoto);
 					}
 				}
 			};

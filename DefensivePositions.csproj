@@ -27,22 +27,26 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>Mods\DefensivePositions\v1.2\Assemblies\</OutputPath>
+    <OutputPath>Mods\DefensivePositions\v1.3\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.0.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lib.Harmony.2.0.0.8\lib\net472\0Harmony.dll</HintPath>
+	<Reference Include="0Harmony, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>packages\Lib.Harmony.2.1.0\lib\net472\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="0MultiplayerAPI">
-      <HintPath>..\0MultiplayerAPI.dll</HintPath>
-    </Reference>
+	<Reference Include="0MultiplayerAPI, Version=0.3.0.0, Culture=neutral, PublicKeyToken=null">
+	  <HintPath>packages\RimWorld.MultiplayerAPI.0.3.0\lib\net472\0MultiplayerAPI.dll</HintPath>
+	</Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\RimWorldManaged\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\RimworldManaged\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="HugsLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>packages\UnlimitedHugs.Rimworld.HugsLib.9.0.0\lib\net472\HugsLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -88,16 +92,16 @@
     <Compile Include="Source\ScheduledReportManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HugsLib\HugsLib.csproj">
-      <Project>{a5d9bd45-533c-4ca0-9298-8950a3da724c}</Project>
-      <Name>HugsLib</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="packages\NuGet.Build.Tasks.Pack.5.2.0\build\NuGet.Build.Tasks.Pack.targets" Condition="Exists('packages\NuGet.Build.Tasks.Pack.5.2.0\build\NuGet.Build.Tasks.Pack.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\NuGet.Build.Tasks.Pack.5.2.0\build\NuGet.Build.Tasks.Pack.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\NuGet.Build.Tasks.Pack.5.2.0\build\NuGet.Build.Tasks.Pack.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

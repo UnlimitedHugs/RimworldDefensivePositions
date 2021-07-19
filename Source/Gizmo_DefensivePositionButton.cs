@@ -16,8 +16,9 @@ namespace DefensivePositions {
 			get { return interactionHandler.GetGizmoContextMenuOptions(0, false); }
 		}
 
-		public override GizmoResult GizmoOnGUI(Vector2 topLeft, float maxWidth) {
-			var result = base.GizmoOnGUI(topLeft, maxWidth);
+		public override GizmoResult GizmoOnGUI(
+			Vector2 topLeft, float maxWidth, GizmoRenderParms renderParams) {
+			var result = base.GizmoOnGUI(topLeft, maxWidth, renderParams);
 			if (result.State == GizmoState.Mouseover) {
 				groupedHandlers?.ForEach(h => h.OnBasicGizmoHover());
 				interactionHandler.OnBasicGizmoHover();

@@ -37,7 +37,7 @@ namespace DefensivePositions {
 			}
 		}
 
-		public override GizmoResult GizmoOnGUI(Vector2 topLeft, float maxWidth) {
+		public override GizmoResult GizmoOnGUI(Vector2 topLeft, float maxWidth, GizmoRenderParms _) {
 			var gizmoRect = new Rect(topLeft.x, topLeft.y, GizmoSize, GizmoSize);
 			var contentRect = gizmoRect.ContractedBy(ContentPadding);
 			Widgets.DrawWindowBackground(gizmoRect);

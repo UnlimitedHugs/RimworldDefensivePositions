@@ -20,7 +20,7 @@ namespace DefensivePositions {
 			var insertAtIndex = gizmos.Count > 0 ? 1 : 0;
 			var draftAllowed = true;
 			if (draftToggleIndex >= 0) {
-				draftAllowed = !gizmos[draftToggleIndex].disabled;
+				draftAllowed = !gizmos[draftToggleIndex].Disabled;
 				insertAtIndex = draftToggleIndex + 1;
 			}
 			// not drawn if pawn is downed

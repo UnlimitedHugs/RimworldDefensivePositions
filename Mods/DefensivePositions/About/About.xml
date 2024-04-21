@@ -40,6 +40,7 @@ Colonists can be assigned to squads for easier selection. To assign, hold the Ct
 There are three other keys on the keypad for quick colonist management: press period to select all colonists on the map, undraft everyone by pressing divide, and press zero to send all colonists to their assigned defensive position.
 In the Options &gt; Mod Options window you can switch the Shift key from saving positions to queuing movement orders.
 	</description>
+	<modIconPath IgnoreIfNoMatchingField="True">DefensivePositionsModIcon</modIconPath>
 	<modDependencies>
 		<li>
 			<packageId>UnlimitedHugs.HugsLib</packageId>

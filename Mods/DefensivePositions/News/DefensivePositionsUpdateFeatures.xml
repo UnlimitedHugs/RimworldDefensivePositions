@@ -28,4 +28,12 @@
 		</content>
 	</HugsLib.UpdateFeatureDef>
 	
+	<HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+		<defName>DefensivePositions_1_13_1</defName>
+		<assemblyVersion>1.13.1</assemblyVersion>
+		<content>
+Player-controlled ghouls and mechanoids can now be assigned and sent to their defensive positions.
+		</content>
+	</HugsLib.UpdateFeatureDef>
+	
 </Defs>

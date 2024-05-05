@@ -13,7 +13,15 @@ namespace DefensivePositions {
 		}
 
 		protected override IEnumerable<Toil> MakeNewToils() {
-			AddFailCondition(() => !pawn.IsColonistPlayerControlled || pawn.Downed || pawn.drafter == null);
+			AddFailCondition(() =>
+				!(
+					pawn.IsColonistPlayerControlled
+					|| pawn.IsColonyMutantPlayerControlled
+					|| pawn.IsColonyMechPlayerControlled
+				)
+				|| pawn.Downed
+				|| pawn.drafter == null
+			);
 			var toil = new Toil {
 				initAction = () => {
 					pawn.drafter.Drafted = true;

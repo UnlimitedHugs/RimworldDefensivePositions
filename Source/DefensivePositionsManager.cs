@@ -112,6 +112,11 @@ namespace DefensivePositions {
 
 		public override void OnGUI() {
 			if (Current.ProgramState != ProgramState.Playing || saveData == null) return;
+			// Consume queued switches even when the runtime does not dispatch FixedUpdate.
+			// FixedUpdate clears the flag, preventing a second toggle from either callback.
+			if (modeSwitchScheduled) {
+				FixedUpdate();
+			}
 			squadHandler.OnGUI();
 			miscHotkeys.OnGUI();
 		}
